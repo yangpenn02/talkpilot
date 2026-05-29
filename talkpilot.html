@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalkPilot · AI 英语私教</title>
+<meta name="theme-color" content="#0b0d10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="talkpilot-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="talkpilot-icon.svg">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0b0d10;
+    --surface: #12161a;
+    --surface2: #171b20;
+    --surface3: #1d2228;
+    --ink: #f4f6f5;
+    --muted: #a4aca8;
+    --hint: #767f7b;
+    --line: rgba(255, 255, 255, 0.09);
+    --line2: rgba(255, 255, 255, 0.16);
+    --blue: #f4f6f5;
+    --blue-soft: #171b20;
+    --green: #f4f6f5;
+    --green-soft: #171b20;
+    --dark: #0f1215;
+    --radius: 10px;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 14% 8%, rgba(255,255,255,0.06), transparent 28%),
+      radial-gradient(circle at 86% 0%, rgba(255,255,255,0.04), transparent 30%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", "Microsoft YaHei UI", sans-serif;
+    line-height: 1.55;
+  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--line2); border-radius: 4px; }
+  ::selection { background: rgba(244, 246, 245, 0.2); }
+  .app {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 24px 0 108px;
+  }
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 26px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #f4f6f5;
+    color: #0b0d10;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    letter-spacing: 0;
+  }
+  .brand h1 {
+    font-size: 18px;
+    letter-spacing: 0;
+  }
+  .brand p {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .pill {
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.04);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 12px;
+    transition: opacity 0.2s ease;
+  }
+  main {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+    gap: 18px;
+    align-items: start;
+  }
+  main.single-page {
+    grid-template-columns: 1fr;
+  }
+  .page-panel { display: block; }
+  .page-panel.hidden { display: none; }
+  .panel {
+    background: rgba(18, 22, 26, 0.88);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 22px 70px rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(18px);
+  }
+  .hero {
+    padding: 28px;
+  }
+  .eyebrow {
+    color: #d9ddd9;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  h2 {
+    font-size: clamp(34px, 4.8vw, 62px);
+    line-height: 1.02;
+    letter-spacing: 0;
+    max-width: 680px;
+  }
+  .hero-copy {
+    color: var(--muted);
+    margin-top: 18px;
+    font-size: 15px;
+    max-width: 620px;
+  }
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .mode-card {
+    min-height: 132px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 16px;
+    cursor: pointer;
+    transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+  }
+  .mode-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.24);
+  }
+  .mode-card:active {
+    transform: translateY(0);
+  }
+  .mode-card.active {
+    border-color: rgba(255,255,255,0.34);
+    background: var(--surface3);
+  }
+  .mode-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .mode-title {
+    font-weight: 800;
+    font-size: 15px;
+  }
+  .mode-time {
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .mode-card p {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .today {
+    margin-top: 18px;
+    padding: 18px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .stat-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 14px;
+    transition: border-color 0.2s ease;
+  }
+  .stat-card:hover {
+    border-color: var(--line2);
+  }
+  .stat-card strong {
+    display: block;
+    font-size: 22px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-card span {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .section-title h3 {
+    font-size: 15px;
+  }
+  .section-title span {
+    color: var(--hint);
+    font-size: 12px;
+  }
+  .sentence {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface2);
+    padding: 16px;
+    transition: border-color 0.2s ease;
+  }
+  .en {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .cn {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .breakdown {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .sentence-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .sentence-actions .ghost {
+    padding: 8px 10px;
+  }
+  .chip {
+    border: 1px solid var(--line);
+    background: var(--surface3);
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .workspace {
+    display: grid;
+    gap: 18px;
+  }
+  .coach {
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+  }
+  .coach-head {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .coach-head strong {
+    display: block;
+    font-size: 15px;
+  }
+  .coach-head span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  select, input, textarea {
+    width: 100%;
+    border: 1px solid var(--line2);
+    border-radius: 8px;
+    background: var(--surface3);
+    padding: 12px 13px;
+    font: inherit;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  select:focus, input:focus, textarea:focus {
+    border-color: rgba(255,255,255,0.38);
+  }
+  .chat {
+    flex: 1;
+    padding: 18px;
+    display: grid;
+    align-content: start;
+    gap: 12px;
+    max-height: 410px;
+    overflow: auto;
+  }
+  .bubble {
+    max-width: 86%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    animation: fadeInUp 0.25s ease both;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .ai {
+    background: var(--surface2);
+    border: 1px solid var(--line);
+  }
+  .me {
+    justify-self: end;
+    background: #f4f6f5;
+    color: #0b0d10;
+  }
+  .bubble small {
+    display: block;
+    color: var(--muted);
+    margin-top: 6px;
+    font-size: 12px;
+  }
+  .me small { color: rgba(11,13,16,0.7); }
+  .composer {
+    border-top: 1px solid var(--line);
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+  }
+  button {
+    border: none;
+    border-radius: 8px;
+    padding: 0 16px;
+    background: #f4f6f5;
+    color: #0b0d10;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  button:hover { transform: translateY(-1px); }
+  button:active { transform: translateY(0); opacity: 0.8; }
+  .ghost {
+    background: var(--surface2);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 11px 13px;
+  }
+  .ghost:hover {
+    border-color: var(--line2);
+  }
+  .connect {
+    padding: 18px;
+  }
+  .connect-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .connect-head strong {
+    display: block;
+    font-size: 15px;
+  }
+  .connect-head span {
+    display: block;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .connect-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) 170px auto;
+    gap: 10px;
+  }
+  .connect-note {
+    color: var(--hint);
+    font-size: 12px;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+  .daily {
+    margin-top: 18px;
+    padding: 18px;
+  }
+  .daily-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .daily-head span {
+    color: var(--hint);
+    font-size: 12px;
+  }
+  .progress {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--surface2);
+    overflow: hidden;
+    margin: 10px 0 14px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #f4f6f5;
+    border-radius: inherit;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .task-list {
+    display: grid;
+    gap: 10px;
+  }
+  .task-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    padding: 12px 13px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .task-row:hover {
+    border-color: var(--line2);
+  }
+  .task-row.done {
+    background: var(--surface3);
+    border-color: rgba(255,255,255,0.24);
+  }
+  .task-row strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+  .task-row p {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid var(--line2);
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    color: transparent;
+    background: transparent;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .task-row.done .check {
+    color: #0b0d10;
+    background: #f4f6f5;
+  }
+  .task-row button {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .practice {
+    padding: 18px;
+  }
+  .timer-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .timer-display {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: end;
+    margin-bottom: 12px;
+  }
+  .timer-display strong {
+    font-size: 34px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-display span {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .timer-presets {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+  .timer-presets .ghost {
+    padding: 8px 10px;
+  }
+  .timer-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .review {
+    padding: 18px;
+  }
+  .review-card {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    padding: 16px;
+    transition: border-color 0.2s ease;
+  }
+  .review-side {
+    min-height: 120px;
+    display: grid;
+    align-content: center;
+    gap: 10px;
+  }
+  .review-side .label {
+    color: var(--hint);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .review-side .front {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .review-side .back {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .review-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .review-actions .ghost {
+    padding: 8px 10px;
+  }
+  .practice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .mini {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px;
+    background: var(--surface);
+  }
+  .mini strong {
+    display: block;
+    margin-bottom: 6px;
+  }
+  .mini p {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .library {
+    padding: 18px;
+  }
+  .library-top {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .library-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .library-actions .ghost {
+    padding: 10px 12px;
+  }
+  .phrase-list {
+    display: grid;
+    gap: 10px;
+  }
+  .phrase {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 13px;
+    background: var(--surface);
+    transition: border-color 0.15s ease;
+  }
+  .phrase:hover {
+    border-color: var(--line2);
+  }
+  .phrase b {
+    display: block;
+    margin-bottom: 5px;
+  }
+  .phrase span {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .phrase-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .phrase-row .ghost {
+    padding: 8px 10px;
+  }
+  .saved-list {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .bottom-nav {
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    width: min(1180px, calc(100% - 24px));
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: rgba(18, 22, 26, 0.92);
+    backdrop-filter: blur(18px);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 8px;
+    z-index: 50;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.36);
+  }
+  .nav-btn {
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    padding: 12px 10px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .nav-btn:hover {
+    background: rgba(255,255,255,0.06);
+  }
+  .nav-btn.active {
+    background: #f4f6f5;
+    color: #0b0d10;
+  }
+  @media (max-width: 940px) {
+    main { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 620px) {
+    .app { width: min(100% - 22px, 1180px); padding-top: 14px; }
+    header { align-items: flex-start; }
+    .pill { display: none; }
+    .hero { padding: 20px; }
+    .mode-grid, .practice-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .connect-form { grid-template-columns: 1fr; }
+    .composer { grid-template-columns: 1fr; }
+    button { padding: 13px 16px; }
+    .bubble { max-width: 100%; }
+    .bottom-nav { width: calc(100% - 14px); gap: 6px; padding: 6px; }
+    .nav-btn { padding: 11px 8px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="logo">TP</div>
+      <div>
+        <h1>TalkPilot</h1>
+        <p>American English Coach · 中英混合私教</p>
+      </div>
+    </div>
+    <div class="pill" id="pagePill">首页 · 白天静默学 · 晚上开口练</div>
+  </header>
+
+  <main>
+    <section class="page-panel" data-page="home">
+      <div class="panel hero">
+        <div class="eyebrow">Your Personal English Coach</div>
+        <h2>碎片时间不浪费，晚上把英语真正说出口。</h2>
+        <p class="hero-copy">TalkPilot 不替代多邻国。它帮你练真实场景：旅游、工作、认识朋友、自然聊天。你可以用中文、英文或中英混合输入，教练会给你更自然的美式表达。</p>
+
+        <div class="mode-grid" id="modeGrid">
+          <div class="mode-card active" data-mode="work">
+            <div class="mode-top"><div class="mode-title">上班静默</div><div class="mode-time">3 min</div></div>
+            <p>不需要读出声。看一句、拆一句、记一个能用表达。</p>
+          </div>
+          <div class="mode-card" data-mode="night">
+            <div class="mode-top"><div class="mode-title">睡前私教</div><div class="mode-time">40 min</div></div>
+            <p>回家大声读，做仿写，纠正常见错误。</p>
+          </div>
+          <div class="mode-card" data-mode="chat">
+            <div class="mode-top"><div class="mode-title">AI 对话</div><div class="mode-time">Anytime</div></div>
+            <p>先用模拟教练，练旅游、工作和交朋友场景。</p>
+          </div>
+          <div class="mode-card" data-mode="phrases">
+            <div class="mode-top"><div class="mode-title">酷句库</div><div class="mode-time">Save</div></div>
+            <p>收集自然、有点帅、但真的能用的英文。</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel today">
+        <div class="section-title">
+          <h3>今日一句</h3>
+          <span>Day 01 · Travel & Friends</span>
+        </div>
+        <div class="sentence">
+          <div class="en" id="dailySentenceEn">I'm not fluent yet, but I'm getting better.</div>
+          <div class="cn" id="dailySentenceCn">我还不流利，但我正在变好。</div>
+          <div class="breakdown" id="dailySentenceTags">
+            <span class="chip">not fluent yet = 还不流利</span>
+            <span class="chip">getting better = 正在变好</span>
+            <span class="chip">适合自我介绍，很自然</span>
+          </div>
+          <div class="sentence-actions">
+            <button class="ghost" id="markSentenceDone">我已读过今天这句</button>
+            <button class="ghost" id="goPracticeFromHome">去练习一下</button>
+            <button class="ghost" id="nextSentence">换一句</button>
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <strong id="savedCount">0</strong>
+            <span>已收藏句子</span>
+          </div>
+          <div class="stat-card">
+            <strong id="chatCount">1</strong>
+            <span>对话记录</span>
+          </div>
+          <div class="stat-card">
+            <strong id="streakCount">1</strong>
+            <span>连续天数</span>
+          </div>
+          <div class="stat-card">
+            <strong id="doneCount">0/3</strong>
+            <span>今日完成</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel daily page-panel" data-page="home">
+        <div class="daily-head">
+          <div>
+            <h3>今日任务</h3>
+            <span>只做 3 件事，别把自己搞累</span>
+          </div>
+          <button class="ghost" id="resetDaily">重置今天</button>
+        </div>
+        <div class="progress"><div class="progress-fill" id="dailyProgress"></div></div>
+        <div class="task-list" id="dailyTasks"></div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <div class="panel connect page-panel" data-page="chat">
+        <div class="connect-head">
+          <div>
+            <strong>真实连接</strong>
+            <span id="connectStatus">现在是模拟教练模式</span>
+          </div>
+          <button class="ghost" id="toggleMode">切换模拟 / 真实</button>
+        </div>
+        <div class="connect-form">
+          <input id="apiKey" type="password" placeholder="OpenAI API Key">
+          <select id="model" aria-label="模型选择">
+            <option value="gpt-5.5">gpt-5.5</option>
+            <option value="gpt-5.4-mini">gpt-5.4-mini</option>
+          </select>
+          <button id="saveConfig">保存并连接</button>
+        </div>
+        <p class="connect-note">密钥只会保存在你本地浏览器里。真实连接默认用 OpenAI 的 Responses API。想装到 iPhone 桌面时，需要先把这页面放到一个可访问的网址，再用 Safari 的"添加到主屏幕"。</p>
+      </div>
+
+      <div class="panel coach page-panel" data-page="chat">
+        <div class="coach-head">
+          <div>
+            <strong>模拟 AI 教练</strong>
+            <span id="coachHint">选择场景，然后用中文/英文/中英混合发一句。</span>
+          </div>
+          <select id="scenario" aria-label="训练场景">
+            <option value="travel">旅游路上认识朋友</option>
+            <option value="work">工作中自我介绍</option>
+            <option value="hotel">酒店入住</option>
+            <option value="cafe">咖啡馆聊天</option>
+          </select>
+        </div>
+        <div class="chat" id="chat">
+          <div class="bubble ai">
+            Hey Yang, let's practice. 你可以直接发中文，比如：&ldquo;我英语还不好，但我想认识更多朋友。&rdquo;
+            <small>我会帮你改成自然美式英语。</small>
+          </div>
+        </div>
+        <div class="composer">
+          <input id="message" value="我英语还不好，但是我想认识更多朋友" aria-label="输入练习内容">
+          <button id="send">发送</button>
+        </div>
+      </div>
+
+      <div class="panel practice page-panel" data-page="practice">
+        <div class="section-title">
+          <h3 id="practiceTitle">上班静默模式</h3>
+          <button class="ghost" id="nextTask">换一个任务</button>
+        </div>
+        <div class="timer-card">
+          <div class="timer-display">
+            <div>
+              <strong id="focusTimer">03:00</strong>
+              <span id="focusLabel">碎片练习</span>
+            </div>
+            <span id="focusState">READY</span>
+          </div>
+          <div class="progress"><div class="progress-fill" id="focusProgress"></div></div>
+          <div class="timer-presets">
+            <button class="ghost preset-btn" data-minutes="3">3 分钟</button>
+            <button class="ghost preset-btn" data-minutes="10">10 分钟</button>
+            <button class="ghost preset-btn" data-minutes="20">20 分钟</button>
+          </div>
+          <div class="timer-actions">
+            <button id="focusStart">开始</button>
+            <button class="ghost" id="focusPause">暂停</button>
+            <button class="ghost" id="focusReset">重置</button>
+          </div>
+        </div>
+        <div class="practice-grid" id="practiceGrid">
+          <div class="mini">
+            <strong>1. 看懂</strong>
+            <p>I'm just here for a few days. = 我只是来这里待几天。</p>
+          </div>
+          <div class="mini">
+            <strong>2. 替换</strong>
+            <p>把 a few days 换成 two weeks，变成 I'm just here for two weeks.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel library page-panel" data-page="library">
+        <div class="section-title">
+          <h3>酷句库</h3>
+          <span>Useful, natural, a little cool</span>
+        </div>
+        <div class="library-top">
+          <div class="mini">
+            <strong>快速复习</strong>
+            <p>从收藏句里抽一条，每次看一眼，马上会更熟。</p>
+          </div>
+          <div class="review-card">
+            <div class="review-side" id="reviewCard">
+              <div class="label">Front</div>
+              <div class="front" id="reviewFront">还没有可复习的句子</div>
+              <div class="back" id="reviewBack">收藏几句后，这里会自动变成你的复习卡。</div>
+            </div>
+            <div class="review-actions">
+              <button class="ghost" id="reviewPrev">上一句</button>
+              <button class="ghost" id="reviewFlip">显示答案</button>
+              <button class="ghost" id="reviewNext">下一句</button>
+              <button class="ghost" id="reviewSaveNow">收藏当前句</button>
+            </div>
+          </div>
+        </div>
+        <div class="library-actions">
+          <button class="ghost" id="clearSaved">清空收藏</button>
+          <button class="ghost" id="copySaved">复制收藏</button>
+        </div>
+        <div class="phrase-list" id="defaultPhraseList">
+          <div class="phrase" data-phrase="I'm just exploring the city." data-cn="我只是随便逛逛这座城市。">
+            <b>I'm just exploring the city.</b><span>我只是随便逛逛这座城市。</span>
+            <div class="breakdown"><span class="chip">旅游</span><span class="chip">自然</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I work in tech, but I'm still figuring things out." data-cn="我做科技相关工作，不过我还在摸索中。">
+            <b>I work in tech, but I'm still figuring things out.</b><span>我做科技相关工作，不过我还在摸索中。</span>
+            <div class="breakdown"><span class="chip">工作</span><span class="chip">低调但自信</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I'd love to hear your story." data-cn="我很想听听你的故事。">
+            <b>I'd love to hear your story.</b><span>我很想听听你的故事。</span>
+            <div class="breakdown"><span class="chip">社交</span><span class="chip">友好开场</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="That's a great question." data-cn="这是个很好的问题。">
+            <b>That's a great question.</b><span>这是个很好的问题。</span>
+            <div class="breakdown"><span class="chip">通用</span><span class="chip">高级感</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I'd like to try something local." data-cn="我想试试本地特色。">
+            <b>I'd like to try something local.</b><span>我想试试本地特色。</span>
+            <div class="breakdown"><span class="chip">旅游</span><span class="chip">点餐</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I work remotely, so my schedule is flexible." data-cn="我远程工作，所以时间比较灵活。">
+            <b>I work remotely, so my schedule is flexible.</b><span>我远程工作，所以时间比较灵活。</span>
+            <div class="breakdown"><span class="chip">工作</span><span class="chip">生活方式</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I'm just getting started." data-cn="我才刚开始。">
+            <b>I'm just getting started.</b><span>我才刚开始。</span>
+            <div class="breakdown"><span class="chip">通用</span><span class="chip">起步感</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="Could you show me the way?" data-cn="你可以给我指一下路吗？">
+            <b>Could you show me the way?</b><span>你可以给我指一下路吗？</span>
+            <div class="breakdown"><span class="chip">旅游</span><span class="chip">问路</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I want to keep learning." data-cn="我想继续学下去。">
+            <b>I want to keep learning.</b><span>我想继续学下去。</span>
+            <div class="breakdown"><span class="chip">通用</span><span class="chip">成长感</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="Let's keep it simple." data-cn="我们简单点说。">
+            <b>Let's keep it simple.</b><span>我们简单点说。</span>
+            <div class="breakdown"><span class="chip">通用</span><span class="chip">高级感</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+        </div>
+        <div class="section-title" style="margin-top:16px;">
+          <h3>我的收藏</h3>
+          <span>会自动保存到本地</span>
+        </div>
+        <div class="saved-list" id="savedList"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<nav class="bottom-nav" aria-label="底部导航">
+  <button class="nav-btn active" data-nav="home">首页</button>
+  <button class="nav-btn" data-nav="practice">练习</button>
+  <button class="nav-btn" data-nav="chat">对话</button>
+  <button class="nav-btn" data-nav="library">收藏</button>
+</nav>
+
+<script>
+const scenarios = {
+  travel: {
+    opener: "旅游场景：自然认识朋友，不要太正式。",
+    answer: "I'm still learning English, but I'd love to meet more people and practice.",
+    cn: "我还在学英语，但我很想认识更多人，也练习一下。",
+    tip: "still learning 比 English is bad 更自然，也更自信。"
+  },
+  work: {
+    opener: "工作场景：清楚、专业、别太夸张。",
+    answer: "I work in tech, and I'm trying to improve my English for better communication.",
+    cn: "我做科技相关工作，我正在提高英语，以便更好沟通。",
+    tip: "for better communication 很适合工作英语。"
+  },
+  hotel: {
+    opener: "酒店场景：简单、直接、礼貌。",
+    answer: "Hi, I have a reservation under the name Yang.",
+    cn: "你好，我有预订，名字是 Yang。",
+    tip: "under the name 是酒店入住高频表达。"
+  },
+  cafe: {
+    opener: "咖啡馆场景：轻松自然，可以用来开场。",
+    answer: "Is this seat taken? I'm just looking for a quiet place to sit.",
+    cn: "这个座位有人吗？我只是想找个安静地方坐一下。",
+    tip: "Is this seat taken? 是非常自然的开场句。"
+  }
+};
+const tasks = {
+  work: [
+    ["1. 开场", "I'm just here for a few days. = 我只是来这里待几天。"],
+    ["2. 替换", "把 a few days 换成 two weeks，变成 I'm just here for two weeks."],
+    ["3. 口气", "I'm here for work. = 我是来出差的。"],
+    ["4. 变体", "I'm here on a short trip. = 我是短途过来的。"],
+    ["5. 自然", "I'm just visiting. = 我只是来玩几天。"],
+    ["6. 慢一点", "I'm still learning English, so please speak slowly. = 我还在学英语，请说慢一点。"],
+    ["7. 工作", "I work in tech. = 我做科技相关工作。"],
+    ["8. 继续", "I'm trying to improve my speaking. = 我在努力提高口语。"],
+    ["9. 过渡", "I'm about to head back to work. = 我准备回去继续上班了。"],
+    ["10. 简短", "I only have a minute. = 我只有一分钟。"],
+    ["11. 轻松", "Let's keep it short. = 我们简单点说。"],
+    ["12. 礼貌", "Could you say that again? = 你可以再说一遍吗？"],
+    ["13. 会议", "I have a meeting later, so I need to keep moving. = 我后面还有会，所以得继续赶时间。"],
+    ["14. 邮件", "Please send me the details by email. = 请把细节发我邮箱。"],
+    ["15. 确认", "Let me check my schedule first. = 我先看一下日程。"],
+    ["16. 反馈", "I'll get back to you after lunch. = 我午饭后再回复你。"]
+  ],
+  night: [
+    ["1. 大声说 5 遍", "I'm not fluent yet, but I'm getting better."],
+    ["2. 仿写一句", "I want to improve my English because I want to travel."],
+    ["3. 接续", "I practice a little every day. = 我每天都会练一点。"],
+    ["4. 自信", "I can understand more than I can say. = 我能听懂的比说出来的更多。"],
+    ["5. 真实", "I'm making progress step by step. = 我在一点点进步。"],
+    ["6. 目标", "My goal is to speak more naturally. = 我的目标是说得更自然。"],
+    ["7. 习惯", "I review my English at night. = 我晚上会复习英语。"],
+    ["8. 结束", "Small steps count. = 小步也算数。"],
+    ["9. 重说", "I want to sound more natural. = 我想听起来更自然。"],
+    ["10. 轻松", "I'm not trying to be perfect. = 我不是想追求完美。"],
+    ["11. 回顾", "I did a little better today. = 我今天比昨天好一点。"],
+    ["12. 收尾", "That's enough for today. = 今天就到这里。"],
+    ["13. 复盘", "I did enough today. = 我今天做得差不多了。"],
+    ["14. 心态", "I want to stay consistent, not perfect. = 我想保持稳定，而不是追求完美。"],
+    ["15. 重点", "I'm focusing on clear and simple English. = 我现在专注于清楚简单的英语。"],
+    ["16. 总结", "One good sentence is enough for today. = 今天一句好句子就够了。"]
+  ],
+  chat: [
+    ["1. 选场景", "从上面的下拉框选择旅游、工作、酒店或咖啡馆。"],
+    ["2. 发一句", "可以用中文发，教练会给你英文版本。"],
+    ["3. 开场", "Hi, is this seat taken? = 你好，这里有人吗？"],
+    ["4. 接话", "Nice to meet you. = 很高兴认识你。"],
+    ["5. 旅游", "I'm just here for a few days. = 我只是来这里待几天。"],
+    ["6. 工作", "I work in tech and I like learning from people. = 我做科技相关工作，也喜欢向别人学习。"],
+    ["7. 轻松", "What do you do? = 你是做什么的？"],
+    ["8. 结束", "Let's keep in touch. = 我们保持联系吧。"],
+    ["9. 追问", "What brought you here? = 是什么带你来这里的？"],
+    ["10. 反应", "That sounds interesting. = 听起来很有意思。"],
+    ["11. 接近", "I'm around here for work. = 我在这附近工作。"],
+    ["12. 继续", "Maybe we can chat for a bit. = 我们也许可以聊一会儿。"],
+    ["13. 热身", "I'm easy to talk to once I warm up. = 我一熟悉起来就很好聊。"],
+    ["14. 交友", "I like meeting people from different places. = 我喜欢认识来自不同地方的人。"],
+    ["15. 延续", "Let's keep the conversation going. = 我们继续聊下去吧。"],
+    ["16. 流利", "I'm still working on my fluency, but I practice regularly. = 我还在提升流利度，但我一直有在练。"]
+  ],
+  phrases: [
+    ["1. 收藏一句", "I'd love to hear your story."],
+    ["2. 今天用一次", "把它改成：I'd love to hear more about your city."],
+    ["3. 自然", "I'm still figuring things out. = 我还在摸索中。"],
+    ["4. 高级", "That's a great question. = 这是个很好的问题。"],
+    ["5. 聊天", "I see what you mean. = 我明白你的意思。"],
+    ["6. 旅游", "I'm looking for something local. = 我在找一些本地特色。"],
+    ["7. 工作", "I work remotely. = 我远程工作。"],
+    ["8. 酷一点", "I'm trying to keep it simple. = 我想尽量简单一点。"],
+    ["9. 旅游", "I'd like to try something authentic. = 我想试试地道一点的东西。"],
+    ["10. 工作", "I handle the details. = 我负责细节。"],
+    ["11. 社交", "It was nice talking to you. = 很高兴和你聊天。"],
+    ["12. 高级", "Let's keep it natural. = 我们尽量说得自然一点。"],
+    ["13. 手感", "I'm getting the hang of it. = 我慢慢上手了。"],
+    ["14. 追问", "What do you usually do on weekends? = 你周末通常做什么？"],
+    ["15. 补充", "I'm looking for the right words. = 我在找合适的词。"],
+    ["16. 自然", "Let's keep it natural. = 我们尽量说得自然一点。"]
+  ]
+};
+const titles = {
+  work: "上班静默模式",
+  night: "睡前私教模式",
+  chat: "AI 对话模式",
+  phrases: "酷句库模式"
+};
+const storageKeys = {
+  apiKey: "talkpilot_openai_api_key",
+  model: "talkpilot_openai_model",
+  useRealAI: "talkpilot_use_real_ai",
+  savedPhrases: "talkpilot_saved_phrases",
+  conversation: "talkpilot_conversation",
+  lastOpenDate: "talkpilot_last_open_date",
+  streak: "talkpilot_streak",
+};
+let currentMode = "work";
+let useRealAI = false;
+let conversation = [];
+let currentPage = "home";
+let savedPhrases = [];
+let dailyState = {};
+let reviewCards = [];
+let reviewIndex = 0;
+let reviewFlipped = false;
+let focusMinutes = 3;
+let focusTotal = 180;
+let focusLeft = focusTotal;
+let focusTimer = null;
+let focusRunning = false;
+let dailySentenceIndex = 0;
+const dailyTasks = [
+  { id: "sentence", title: "学今日一句", desc: "先把今天这句读懂，再点一下完成。", button: "已读过" },
+  { id: "practice", title: "完成一轮练习", desc: "做 3 分钟、10 分钟或 20 分钟练习都算。", button: "已完成" },
+  { id: "save", title: "收藏一句酷句", desc: "把今天最顺口的一句存进收藏。", button: "已收藏" },
+];
+const dailySentenceBank = [
+  {
+    en: "I'm just here for a few days.",
+    cn: "我只是来这里待几天。",
+    tags: ["travel = 旅游", "a few days = 几天", "适合开场"]
+  },
+  {
+    en: "Could you recommend a good local restaurant?",
+    cn: "你可以推荐一家不错的本地餐厅吗？",
+    tags: ["recommend = 推荐", "local restaurant = 本地餐厅", "点餐/旅游"]
+  },
+  {
+    en: "I'd like to check in, please.",
+    cn: "我想办理入住。",
+    tags: ["check in = 办理入住", "hotel = 酒店", "高频实用"]
+  },
+  {
+    en: "How do I get to the city center?",
+    cn: "我怎么去市中心？",
+    tags: ["get to = 到达", "city center = 市中心", "问路"]
+  },
+  {
+    en: "Is it okay if I take a photo here?",
+    cn: "我可以在这里拍照吗？",
+    tags: ["take a photo = 拍照", "礼貌表达", "旅行常用"]
+  },
+  {
+    en: "I want something simple and affordable.",
+    cn: "我想要简单又实惠的东西。",
+    tags: ["simple = 简单", "affordable = 实惠", "点餐/购物"]
+  },
+  {
+    en: "Could you say that more slowly?",
+    cn: "你可以说慢一点吗？",
+    tags: ["say that more slowly = 说慢一点", "礼貌提问", "听不懂时很好用"]
+  },
+  {
+    en: "I'm looking for a place that's easy to find.",
+    cn: "我在找一个容易找到的地方。",
+    tags: ["easy to find = 容易找到", "place = 地方", "适合导航"]
+  },
+  {
+    en: "This is my first time here.",
+    cn: "这是我第一次来这里。",
+    tags: ["first time = 第一次", "here = 这里", "自然自我介绍"]
+  },
+  {
+    en: "I'd love to try something local.",
+    cn: "我很想试试本地特色。",
+    tags: ["local = 本地特色", "try something = 尝试一些东西", "旅游必备"]
+  },
+  {
+    en: "I work in tech, and I like clear communication.",
+    cn: "我做科技相关工作，而且我喜欢清楚直接的沟通。",
+    tags: ["work in tech = 做科技工作", "clear communication = 清楚沟通", "工作感"]
+  },
+  {
+    en: "Please send me the details by email.",
+    cn: "请把细节发我邮箱。",
+    tags: ["send me = 发给我", "by email = 通过邮箱", "工作场景"]
+  },
+  {
+    en: "I have a meeting later, so I need to keep moving.",
+    cn: "我后面还有会，所以得继续赶时间。",
+    tags: ["meeting later = 后面有会", "keep moving = 继续赶时间", "上班节奏"]
+  },
+  {
+    en: "I'm still learning English, so please speak slowly.",
+    cn: "我还在学英语，所以请说慢一点。",
+    tags: ["still learning English = 还在学英语", "speak slowly = 说慢一点", "真实好用"]
+  },
+  {
+    en: "Let me check my schedule first.",
+    cn: "我先看一下日程。",
+    tags: ["check my schedule = 看日程", "first = 先", "工作通用"]
+  },
+  {
+    en: "I can handle that after lunch.",
+    cn: "我午饭后可以处理这个。",
+    tags: ["after lunch = 午饭后", "handle that = 处理这个", "工作口语"]
+  },
+  {
+    en: "I'm trying to be more direct and clear.",
+    cn: "我在努力变得更直接、更清楚。",
+    tags: ["direct and clear = 直接清楚", "trying to = 正在努力", "很像真实工作表达"]
+  },
+  {
+    en: "I work remotely, so my schedule is flexible.",
+    cn: "我远程工作，所以时间比较灵活。",
+    tags: ["work remotely = 远程工作", "flexible = 灵活", "介绍自己"]
+  },
+  {
+    en: "I'm around if you need anything.",
+    cn: "如果你需要什么，我都在。",
+    tags: ["I'm around = 我在", "need anything = 需要什么", "友好"]
+  },
+  {
+    en: "Thanks for the quick update.",
+    cn: "谢谢你快速更新我。",
+    tags: ["quick update = 快速更新", "thank you = 礼貌", "工作常见"]
+  },
+  {
+    en: "I'd love to hear your story.",
+    cn: "我很想听听你的故事。",
+    tags: ["hear your story = 听你的故事", "社交", "友好开场"]
+  },
+  {
+    en: "What do you usually do on weekends?",
+    cn: "你周末通常做什么？",
+    tags: ["usually do = 通常做", "on weekends = 周末", "聊天延伸"]
+  },
+  {
+    en: "I'm easy to talk to once I warm up.",
+    cn: "我一熟悉起来就很好聊。",
+    tags: ["easy to talk to = 很好聊", "warm up = 熟悉起来", "社交"]
+  },
+  {
+    en: "I like meeting people from different places.",
+    cn: "我喜欢认识来自不同地方的人。",
+    tags: ["meeting people = 认识人", "different places = 不同地方", "交朋友"]
+  },
+  {
+    en: "Let's keep the conversation going.",
+    cn: "我们继续聊下去吧。",
+    tags: ["keep the conversation going = 继续聊天", "自然", "高频"]
+  },
+  {
+    en: "That's a great question.",
+    cn: "这是个很好的问题。",
+    tags: ["great question = 好问题", "反应自然", "万能句"]
+  },
+  {
+    en: "I'm not fluent yet, but I'm getting better.",
+    cn: "我还不流利，但我正在变好。",
+    tags: ["not fluent yet = 还不流利", "getting better = 正在变好", "自我介绍"]
+  },
+  {
+    en: "I want to sound more natural when I speak.",
+    cn: "我想说话时听起来更自然。",
+    tags: ["sound more natural = 听起来更自然", "口语", "目标表达"]
+  },
+  {
+    en: "I'm figuring things out one step at a time.",
+    cn: "我在一步一步摸索。",
+    tags: ["figuring things out = 摸索", "one step at a time = 一步一步", "很稳"]
+  },
+  {
+    en: "One good sentence is enough for today.",
+    cn: "今天一句好句子就够了。",
+    tags: ["one good sentence = 一句好句子", "today = 今天", "收尾感"]
+  }
+];
+function $(id) { return document.getElementById(id); }
+function setPage(page) {
+  currentPage = page;
+  document.querySelector("main").classList.toggle("single-page", page !== "home");
+  document.querySelectorAll(".page-panel").forEach(panel => {
+    panel.classList.toggle("hidden", panel.dataset.page !== page);
+  });
+  document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.nav === page);
+  });
+  const pillText = {
+    home: "首页 · 白天静默学 · 晚上开口练",
+    practice: "练习 · 静默输入 · 仿写纠错",
+    chat: "对话 · 旅游 / 工作 / 交朋友",
+    library: "收藏 · 你的酷句库",
+  };
+  $("pagePill").textContent = pillText[page] || pillText.home;
+}
+function renderTasks(mode) {
+  $("practiceTitle").textContent = titles[mode];
+  $("practiceGrid").innerHTML = tasks[mode].map(item => `
+    <div class="mini">
+      <strong>${item[0]}</strong>
+      <p>${item[1]}</p>
+    </div>
+  `).join("");
+}
+function renderDailySentence(index = dailySentenceIndex) {
+  dailySentenceIndex = ((index % dailySentenceBank.length) + dailySentenceBank.length) % dailySentenceBank.length;
+  const item = dailySentenceBank[dailySentenceIndex];
+  $("dailySentenceEn").textContent = item.en;
+  $("dailySentenceCn").textContent = item.cn;
+  $("dailySentenceTags").innerHTML = item.tags.map(tag => `<span class="chip">${tag}</span>`).join("");
+}
+function getDailyKey() {
+  return `talkpilot_daily_${todayKey()}`;
+}
+function loadDailyState() {
+  try {
+    const raw = localStorage.getItem(getDailyKey());
+    dailyState = raw ? JSON.parse(raw) : {};
+  } catch {
+    dailyState = {};
+  }
+  if (!dailyState || typeof dailyState !== "object") dailyState = {};
+  renderDailyTasks();
+}
+function persistDailyState() {
+  localStorage.setItem(getDailyKey(), JSON.stringify(dailyState));
+  renderDailyTasks();
+}
+function toggleDailyTask(id, force) {
+  const next = typeof force === "boolean" ? force : !dailyState[id];
+  dailyState[id] = next;
+  persistDailyState();
+}
+function renderDailyTasks() {
+  const done = dailyTasks.filter(task => dailyState[task.id]).length;
+  $("doneCount").textContent = `${done}/${dailyTasks.length}`;
+  $("dailyProgress").style.width = `${(done / dailyTasks.length) * 100}%`;
+  $("dailyTasks").innerHTML = dailyTasks.map(task => `
+    <div class="task-row ${dailyState[task.id] ? "done" : ""}" data-task-id="${task.id}">
+      <div>
+        <strong>${task.title}</strong>
+        <p>${task.desc}</p>
+      </div>
+      <div class="check">${dailyState[task.id] ? "✓" : ""}</div>
+    </div>
+  `).join("");
+}
+function syncSavedCount() {
+  $("savedCount").textContent = String(savedPhrases.length);
+}
+function todayKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+function updateStreak() {
+  const lastOpen = localStorage.getItem(storageKeys.lastOpenDate);
+  let streak = parseInt(localStorage.getItem(storageKeys.streak) || "1", 10);
+  const today = todayKey();
+  if (!lastOpen) {
+    localStorage.setItem(storageKeys.lastOpenDate, today);
+    localStorage.setItem(storageKeys.streak, "1");
+    streak = 1;
+  } else if (lastOpen !== today) {
+    const prev = new Date(lastOpen);
+    const now = new Date(today);
+    const diffDays = Math.round((now - prev) / 86400000);
+    streak = diffDays === 1 ? streak + 1 : 1;
+    localStorage.setItem(storageKeys.lastOpenDate, today);
+    localStorage.setItem(storageKeys.streak, String(streak));
+  }
+  $("streakCount").textContent = String(streak);
+}
+function persistConversation() {
+  localStorage.setItem(storageKeys.conversation, JSON.stringify(conversation.slice(-24)));
+  $("chatCount").textContent = String(conversation.length);
+}
+function loadConversation() {
+  try {
+    const raw = localStorage.getItem(storageKeys.conversation);
+    if (!raw) return;
+    const items = JSON.parse(raw);
+    if (!Array.isArray(items)) return;
+    conversation = items;
+    $("chat").innerHTML = "";
+    for (const item of conversation) {
+      if (item.role === "user") {
+        appendBubble("me", escapeHtml(item.text), "你的原句");
+      } else {
+        appendBubble("ai", formatCoachText(item.text), "历史回复");
+      }
+    }
+    $("chatCount").textContent = String(conversation.length);
+  } catch {}
+}
+function loadSavedPhrases() {
+  try {
+    const raw = localStorage.getItem(storageKeys.savedPhrases);
+    savedPhrases = raw ? JSON.parse(raw) : [];
+    if (!Array.isArray(savedPhrases)) savedPhrases = [];
+  } catch {
+    savedPhrases = [];
+  }
+  renderSavedPhrases();
+  $("savedCount").textContent = String(savedPhrases.length);
+}
+function persistSavedPhrases() {
+  localStorage.setItem(storageKeys.savedPhrases, JSON.stringify(savedPhrases.slice(-100)));
+  $("savedCount").textContent = String(savedPhrases.length);
+  renderSavedPhrases();
+}
+function renderSavedPhrases() {
+  const list = $("savedList");
+  if (!savedPhrases.length) {
+    list.innerHTML = `<div class="mini"><strong>还没有收藏</strong><p>点"收藏"就会保存在这里，之后可以复制出来继续练。</p></div>`;
+    return;
+  }
+  list.innerHTML = savedPhrases.map((item, idx) => `
+    <div class="phrase" data-saved-index="${idx}">
+      <b>${escapeHtml(item.en)}</b>
+      <span>${escapeHtml(item.cn || "")}</span>
+      <div class="phrase-row">
+        <button class="ghost copy-saved">复制</button>
+        <button class="ghost remove-saved">移除</button>
+      </div>
+    </div>
+  `).join("");
+}
+function savePhrase(en, cn) {
+  if (!savedPhrases.some(item => item.en === en)) {
+    savedPhrases.unshift({ en, cn });
+    persistSavedPhrases();
+    toggleDailyTask("save", true);
+  }
+}
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {}
+}
+function updateFocusDisplay() {
+  const mm = String(Math.floor(focusLeft / 60)).padStart(2, "0");
+  const ss = String(focusLeft % 60).padStart(2, "0");
+  $("focusTimer").textContent = `${mm}:${ss}`;
+  $("focusLabel").textContent = `${focusMinutes} 分钟练习`;
+  $("focusState").textContent = focusRunning ? "ACTIVE" : (focusLeft === focusTotal ? "READY" : "PAUSED");
+  $("focusProgress").style.width = `${((focusTotal - focusLeft) / focusTotal) * 100}%`;
+}
+function setFocusPreset(minutes) {
+  focusMinutes = minutes;
+  focusTotal = minutes * 60;
+  focusLeft = focusTotal;
+  focusRunning = false;
+  clearInterval(focusTimer);
+  updateFocusDisplay();
+}
+function startFocusTimer() {
+  if (focusRunning) return;
+  focusRunning = true;
+  updateFocusDisplay();
+  focusTimer = setInterval(() => {
+    focusLeft -= 1;
+    if (focusLeft <= 0) {
+      focusLeft = focusTotal;
+      focusRunning = false;
+      clearInterval(focusTimer);
+      toggleDailyTask("practice", true);
+      appendBubble("ai", "练习完成。你已经完成了一轮专注练习。", "今天的进度又往前了一步。");
+    }
+    updateFocusDisplay();
+  }, 1000);
+}
+function pauseFocusTimer() {
+  focusRunning = false;
+  clearInterval(focusTimer);
+  updateFocusDisplay();
+}
+function resetFocusTimer() {
+  focusRunning = false;
+  clearInterval(focusTimer);
+  focusLeft = focusTotal;
+  updateFocusDisplay();
+}
+function getReviewSourceCards() {
+  const saved = savedPhrases.map(item => ({ en: item.en, cn: item.cn, source: "收藏" }));
+  const historyPairs = [];
+  for (let i = 0; i < conversation.length - 1; i++) {
+    const cur = conversation[i];
+    const next = conversation[i + 1];
+    if (cur.role === "user" && next.role === "assistant") {
+      const answer = next.text.split("\n").find(line => line.trim()) || next.text;
+      historyPairs.push({
+        en: cur.text,
+        cn: answer.replace(/^更自然的说法[:：]?\s*/i, ""),
+        source: "对话",
+      });
+    }
+  }
+  const merged = [...saved, ...historyPairs];
+  return merged.length ? merged : [{ en: "I'm not fluent yet, but I'm getting better.", cn: "我还不流利，但我正在变好。", source: "今日一句" }];
+}
+function loadReviewCards() {
+  reviewCards = getReviewSourceCards();
+  if (reviewIndex >= reviewCards.length) reviewIndex = 0;
+  reviewFlipped = false;
+  renderReviewCard();
+}
+function renderReviewCard() {
+  const card = reviewCards[reviewCards.length ? reviewIndex : 0] || { en: "", cn: "", source: "" };
+  $("reviewFront").textContent = reviewFlipped ? card.cn : card.en;
+  $("reviewBack").textContent = reviewFlipped ? card.en : card.cn;
+  $("reviewCard").querySelector(".label").textContent = reviewFlipped ? "Back" : "Front";
+  $("reviewFlip").textContent = reviewFlipped ? "显示英文" : "显示答案";
+}
+function nextReview(delta) {
+  if (!reviewCards.length) return;
+  reviewIndex = (reviewIndex + delta + reviewCards.length) % reviewCards.length;
+  reviewFlipped = false;
+  renderReviewCard();
+}
+function appendBubble(type, html, small = "") {
+  const node = document.createElement("div");
+  node.className = `bubble ${type}`;
+  node.innerHTML = `${html}${small ? `<small>${small}</small>` : ""}`;
+  $("chat").appendChild(node);
+  $("chat").scrollTop = $("chat").scrollHeight;
+  persistConversation();
+  return node;
+}
+function escapeHtml(text) {
+  return text.replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[ch]));
+}
+function extractResponseText(data) {
+  if (!data) return "";
+  if (typeof data.output_text === "string" && data.output_text.trim()) return data.output_text.trim();
+  if (typeof data.text === "string" && data.text.trim()) return data.text.trim();
+  const parts = [];
+  for (const item of data.output || []) {
+    for (const content of item.content || []) {
+      if (typeof content.text === "string" && content.text.trim()) parts.push(content.text);
+    }
+  }
+  if (parts.length) return parts.join("").trim();
+  return "I couldn't read the AI response.";
+}
+function setConnectStatus() {
+  const connected = useRealAI && $("apiKey").value.trim().length > 0;
+  $("connectStatus").textContent = connected
+    ? `真实连接已开启 · 模型 ${$("model").value}`
+    : "现在是模拟教练模式";
+  $("coachHint").textContent = connected
+    ? "已经接到真实 AI，直接发中文、英文或中英混合。"
+    : "选择场景，然后用中文/英文/中英混合发一句。";
+}
+function loadSettings() {
+  $("apiKey").value = localStorage.getItem(storageKeys.apiKey) || "";
+  $("model").value = localStorage.getItem(storageKeys.model) || "gpt-5.5";
+  useRealAI = localStorage.getItem(storageKeys.useRealAI) === "true";
+  setConnectStatus();
+}
+function saveSettings() {
+  localStorage.setItem(storageKeys.apiKey, $("apiKey").value.trim());
+  localStorage.setItem(storageKeys.model, $("model").value);
+  localStorage.setItem(storageKeys.useRealAI, String(useRealAI));
+  setConnectStatus();
+}
+async function callOpenAI(userText) {
+  const apiKey = $("apiKey").value.trim();
+  if (!apiKey) throw new Error("请先填入 OpenAI API Key。");
+  const model = $("model").value;
+  const scene = scenarios[$("scenario").value];
+  const history = conversation.slice(-6).map(item => `${item.role === "user" ? "用户" : "教练"}: ${item.text}`).join("\n");
+  const instructions = [
+    "You are TalkPilot, a warm American English coach for a Chinese learner.",
+    "The user wants practical English for travel, work, meeting friends, and natural conversation.",
+    "Reply in Chinese-first mixed with English examples.",
+    "Always provide: 1) a more natural American English version, 2) Chinese meaning, 3) one short coaching tip.",
+    "Keep it concise, friendly, and practical.",
+  ].join(" ");
+  const input = [
+    `场景: ${scene.opener}`,
+    `当前对话记录:\n${history || "无"}`,
+    `用户这次输入: ${userText}`,
+    "请直接输出以下格式：",
+    "更自然的说法:",
+    "中文意思:",
+    "一句提示:",
+  ].join("\n");
+
+  const res = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      instructions,
+      input,
+      max_output_tokens: 320,
+    }),
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`OpenAI API 请求失败：${res.status} ${errText.slice(0, 220)}`);
+  }
+  const data = await res.json();
+  return extractResponseText(data);
+}
+function formatCoachText(text) {
+  return escapeHtml(text).replace(/\n/g, "<br>");
+}
+async function coachReply() {
+  const value = $("message").value.trim();
+  if (!value) return;
+  conversation.push({ role: "user", text: value });
+  appendBubble("me", escapeHtml(value), "你的原句");
+  $("message").value = "";
+  const scenario = scenarios[$("scenario").value];
+
+  if (!useRealAI || !$("apiKey").value.trim()) {
+    conversation.push({ role: "assistant", text: scenario.answer });
+    appendBubble("ai", `
+      <b>更自然的说法：</b><br>${escapeHtml(scenario.answer)}<br><br>
+      <b>中文意思：</b><br>${escapeHtml(scenario.cn)}
+    `, `教练提示：${scenario.tip}`);
+    return;
+  }
+
+  const loading = appendBubble("ai", "正在连接真实 AI...", "Responses API · gpt-5.5");
+  try {
+    const reply = await callOpenAI(value);
+    conversation.push({ role: "assistant", text: reply });
+    loading.innerHTML = formatCoachText(reply);
+    loading.insertAdjacentHTML("beforeend", `<small>真实 AI 已回复 · ${escapeHtml($("model").value)}</small>`);
+  } catch (error) {
+    loading.innerHTML = `连接失败：${escapeHtml(error.message)}<br><br>你可以先继续用模拟教练。`;
+    loading.className = "bubble ai";
+  }
+}
+document.querySelectorAll(".mode-card").forEach(card => {
+  card.addEventListener("click", () => {
+    document.querySelectorAll(".mode-card").forEach(c => c.classList.remove("active"));
+    card.classList.add("active");
+    currentMode = card.dataset.mode;
+    renderTasks(currentMode);
+    if (currentMode === "work" || currentMode === "night") setPage("practice");
+    if (currentMode === "chat") setPage("chat");
+    if (currentMode === "phrases") setPage("library");
+  });
+});
+$("scenario").addEventListener("change", () => {
+  const s = scenarios[$("scenario").value];
+  appendBubble("ai", escapeHtml(s.opener), "你可以用中文先说，我来给英文版本。");
+  conversation.push({ role: "assistant", text: s.opener });
+});
+$("send").addEventListener("click", coachReply);
+$("message").addEventListener("keydown", e => {
+  if (e.key === "Enter") coachReply();
+});
+$("markSentenceDone").addEventListener("click", () => {
+  toggleDailyTask("sentence", true);
+  setPage("practice");
+});
+$("goPracticeFromHome").addEventListener("click", () => {
+  setPage("practice");
+});
+$("nextSentence").addEventListener("click", () => {
+  renderDailySentence(dailySentenceIndex + 1);
+});
+$("saveConfig").addEventListener("click", () => {
+  useRealAI = true;
+  saveSettings();
+  appendBubble("ai", "已保存设置，真实连接已准备好。", "你可以直接开始发送。");
+});
+$("toggleMode").addEventListener("click", () => {
+  useRealAI = !useRealAI;
+  saveSettings();
+  appendBubble("ai", useRealAI ? "已切换到真实 AI 模式。" : "已切回模拟教练模式。", "");
+});
+$("apiKey").addEventListener("change", saveSettings);
+$("model").addEventListener("change", saveSettings);
+$("apiKey").addEventListener("input", () => {
+  localStorage.setItem(storageKeys.apiKey, $("apiKey").value.trim());
+  setConnectStatus();
+});
+$("model").addEventListener("input", () => {
+  localStorage.setItem(storageKeys.model, $("model").value);
+  setConnectStatus();
+});
+$("resetDaily").addEventListener("click", () => {
+  dailyState = {};
+  persistDailyState();
+});
+$("dailyTasks").addEventListener("click", e => {
+  const row = e.target.closest(".task-row");
+  if (!row) return;
+  toggleDailyTask(row.dataset.taskId);
+});
+$("focusStart").addEventListener("click", () => {
+  startFocusTimer();
+});
+$("focusPause").addEventListener("click", () => {
+  pauseFocusTimer();
+});
+$("focusReset").addEventListener("click", () => {
+  resetFocusTimer();
+});
+document.querySelectorAll(".preset-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    setFocusPreset(parseInt(btn.dataset.minutes, 10));
+  });
+});
+$("clearSaved").addEventListener("click", () => {
+  savedPhrases = [];
+  persistSavedPhrases();
+  loadReviewCards();
+});
+$("copySaved").addEventListener("click", () => {
+  const text = savedPhrases.map(item => `${item.en}\n${item.cn}`).join("\n\n");
+  copyText(text);
+});
+$("savedList").addEventListener("click", async e => {
+  const card = e.target.closest(".phrase");
+  if (!card) return;
+  const idx = parseInt(card.dataset.savedIndex, 10);
+  if (Number.isNaN(idx)) return;
+  if (e.target.classList.contains("copy-saved")) {
+    await copyText(`${savedPhrases[idx].en}\n${savedPhrases[idx].cn}`);
+  }
+  if (e.target.classList.contains("remove-saved")) {
+    savedPhrases.splice(idx, 1);
+    persistSavedPhrases();
+    loadReviewCards();
+  }
+});
+document.querySelectorAll("#defaultPhraseList .phrase").forEach(card => {
+  card.addEventListener("click", e => {
+    if (e.target.classList.contains("save-phrase")) {
+      savePhrase(card.dataset.phrase, card.dataset.cn);
+    }
+    if (e.target.classList.contains("copy-phrase")) {
+      copyText(`${card.dataset.phrase}\n${card.dataset.cn}`);
+    }
+  });
+});
+$("nextTask").addEventListener("click", () => {
+  const order = ["work", "night", "chat", "phrases"];
+  const next = order[(order.indexOf(currentMode) + 1) % order.length];
+  document.querySelector(`.mode-card[data-mode="${next}"]`).click();
+});
+$("reviewPrev").addEventListener("click", () => nextReview(-1));
+$("reviewFlip").addEventListener("click", () => {
+  reviewFlipped = !reviewFlipped;
+  renderReviewCard();
+});
+$("reviewNext").addEventListener("click", () => nextReview(1));
+$("reviewSaveNow").addEventListener("click", () => {
+  const card = reviewCards[reviewIndex];
+  if (!card) return;
+  savePhrase(card.en, card.cn);
+  loadReviewCards();
+});
+document.querySelectorAll(".nav-btn").forEach(btn => {
+  btn.addEventListener("click", () => setPage(btn.dataset.nav));
+});
+loadSettings();
+renderTasks(currentMode);
+updateStreak();
+loadDailyState();
+loadSavedPhrases();
+loadConversation();
+loadReviewCards();
+setFocusPreset(3);
+renderDailySentence(todayKey().split("-").reduce((sum, part) => sum + parseInt(part, 10), 0));
+if (!conversation.length) {
+  conversation.push({ role: "assistant", text: `Hey Yang, let's practice. 你可以直接发中文，比如：\u201c我英语还不好，但我想认识更多朋友。\u201d` });
+  persistConversation();
+  appendBubble("ai", `Hey Yang, let's practice. 你可以直接发中文，比如：\u201c我英语还不好，但我想认识更多朋友。\u201d`, "我会帮你改成自然美式英语。");
+}
+updateFocusDisplay();
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  navigator.serviceWorker.register("./sw.js").catch(() => {});
+}
+setPage("home");
+</script>
+</body>
+</html>

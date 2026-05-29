@@ -1,0 +1,18 @@
+{
+  "name": "TalkPilot",
+  "short_name": "TalkPilot",
+  "description": "AI English coach for travel, work, and real conversations.",
+  "start_url": "./talkpilot.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0d10",
+  "theme_color": "#0b0d10",
+  "icons": [
+    {
+      "src": "talkpilot-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
