@@ -257,6 +257,41 @@
     font-size: 12px;
     color: var(--muted);
   }
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 10px;
+  }
+  .search-input:focus { border-color: var(--ink); }
+  .search-input::placeholder { color: var(--hint); }
   .workspace {
     display: grid;
     gap: 18px;
@@ -391,6 +426,24 @@
     margin-top: 10px;
     line-height: 1.6;
   }
+  .speaker-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--line2);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, transform 0.15s;
+    flex-shrink: 0;
+  }
+  .speaker-btn:hover { background: var(--surface3); color: var(--ink); }
+  .speaker-btn:active { transform: scale(0.92); }
+  .speaker-btn.playing { color: var(--ink); border-color: var(--ink); }
   .daily {
     margin-top: 18px;
     padding: 18px;
@@ -731,8 +784,13 @@
           <span>Day 01 · Travel & Friends</span>
         </div>
         <div class="sentence">
-          <div class="en" id="dailySentenceEn">I'm not fluent yet, but I'm getting better.</div>
-          <div class="cn" id="dailySentenceCn">我还不流利，但我正在变好。</div>
+          <div style="display:flex;align-items:flex-start;gap:10px;">
+            <div style="flex:1;">
+              <div class="en" id="dailySentenceEn">I'm not fluent yet, but I'm getting better.</div>
+              <div class="cn" id="dailySentenceCn">我还不流利，但我正在变好。</div>
+            </div>
+            <button class="speaker-btn" id="speakSentence" title="朗读" aria-label="朗读">?</button>
+          </div>
           <div class="breakdown" id="dailySentenceTags">
             <span class="chip">not fluent yet = 还不流利</span>
             <span class="chip">getting better = 正在变好</span>
@@ -898,6 +956,7 @@
             <b>I'm just exploring the city.</b><span>我只是随便逛逛这座城市。</span>
             <div class="breakdown"><span class="chip">旅游</span><span class="chip">自然</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -906,6 +965,7 @@
             <b>I work in tech, but I'm still figuring things out.</b><span>我做科技相关工作，不过我还在摸索中。</span>
             <div class="breakdown"><span class="chip">工作</span><span class="chip">低调但自信</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -914,6 +974,7 @@
             <b>I'd love to hear your story.</b><span>我很想听听你的故事。</span>
             <div class="breakdown"><span class="chip">社交</span><span class="chip">友好开场</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -922,6 +983,7 @@
             <b>That's a great question.</b><span>这是个很好的问题。</span>
             <div class="breakdown"><span class="chip">通用</span><span class="chip">高级感</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -930,6 +992,7 @@
             <b>I'd like to try something local.</b><span>我想试试本地特色。</span>
             <div class="breakdown"><span class="chip">旅游</span><span class="chip">点餐</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -938,6 +1001,7 @@
             <b>I work remotely, so my schedule is flexible.</b><span>我远程工作，所以时间比较灵活。</span>
             <div class="breakdown"><span class="chip">工作</span><span class="chip">生活方式</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -946,6 +1010,7 @@
             <b>I'm just getting started.</b><span>我才刚开始。</span>
             <div class="breakdown"><span class="chip">通用</span><span class="chip">起步感</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -954,6 +1019,7 @@
             <b>Could you show me the way?</b><span>你可以给我指一下路吗？</span>
             <div class="breakdown"><span class="chip">旅游</span><span class="chip">问路</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -962,6 +1028,7 @@
             <b>I want to keep learning.</b><span>我想继续学下去。</span>
             <div class="breakdown"><span class="chip">通用</span><span class="chip">成长感</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -970,6 +1037,7 @@
             <b>Let's keep it simple.</b><span>我们简单点说。</span>
             <div class="breakdown"><span class="chip">通用</span><span class="chip">高级感</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -978,6 +1046,7 @@
             <b>Is this seat taken?</b><span>这个座位有人吗？</span>
             <div class="breakdown"><span class="chip">社交</span><span class="chip">开场白</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -986,6 +1055,7 @@
             <b>Could you recommend something?</b><span>你能推荐点什么吗？</span>
             <div class="breakdown"><span class="chip">餐厅</span><span class="chip">购物</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -994,6 +1064,7 @@
             <b>I have a reservation under the name Yang.</b><span>我用 Yang 的名字预订了。</span>
             <div class="breakdown"><span class="chip">酒店</span><span class="chip">餐厅</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -1002,6 +1073,7 @@
             <b>Let's keep in touch.</b><span>我们保持联系。</span>
             <div class="breakdown"><span class="chip">社交</span><span class="chip">告别</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -1010,6 +1082,7 @@
             <b>I'm not fluent yet, but I'm getting better.</b><span>我还不流利，但我在进步。</span>
             <div class="breakdown"><span class="chip">通用</span><span class="chip">自信</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -1018,6 +1091,7 @@
             <b>I'm getting the hang of it.</b><span>我慢慢上手了。</span>
             <div class="breakdown"><span class="chip">工作</span><span class="chip">进步</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -1026,6 +1100,7 @@
             <b>How much does this cost?</b><span>这个多少钱？</span>
             <div class="breakdown"><span class="chip">购物</span><span class="chip">实用</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -1034,6 +1109,7 @@
             <b>I need to go to the airport.</b><span>我需要去机场。</span>
             <div class="breakdown"><span class="chip">出行</span><span class="chip">交通</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -1042,6 +1118,7 @@
             <b>Nice to meet you.</b><span>很高兴认识你。</span>
             <div class="breakdown"><span class="chip">社交</span><span class="chip">基础</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -1050,6 +1127,7 @@
             <b>I see what you mean.</b><span>我明白你的意思。</span>
             <div class="breakdown"><span class="chip">工作</span><span class="chip">社交</span></div>
             <div class="phrase-row">
+              <button class="ghost speak-phrase">朗读</button>
               <button class="ghost save-phrase">收藏</button>
               <button class="ghost copy-phrase">复制</button>
             </div>
@@ -1059,6 +1137,7 @@
           <h3>我的收藏</h3>
           <span>会自动保存到本地</span>
         </div>
+        <input id="savedSearch" class="search-input" placeholder="搜索收藏的句子..." aria-label="搜索收藏">
         <div class="saved-list" id="savedList"></div>
       </div>
     </section>
@@ -1072,6 +1151,7 @@
   <button class="nav-btn" data-nav="library">收藏</button>
 </nav>
 
+<div class="toast" id="toast"></div>
 <script>
 const scenarios = {
   travel: {
@@ -1443,6 +1523,29 @@ function playBeep() {
     osc.stop(ctx.currentTime + 1);
   } catch (_) { /* silent fail */ }
 }
+function speak(text) {
+  if (!text) return;
+  try {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-US";
+    u.rate = 0.85;
+    u.pitch = 1;
+    const voices = window.speechSynthesis.getVoices();
+    const en = voices.find(v => v.lang.startsWith("en"));
+    if (en) u.voice = en;
+    window.speechSynthesis.speak(u);
+  } catch (_) { /* silent fail */ }
+}
+let toastTimer = null;
+function showToast(msg) {
+  const el = $("toast");
+  if (!el) return;
+  clearTimeout(toastTimer);
+  el.textContent = msg;
+  el.classList.add("show");
+  toastTimer = setTimeout(() => el.classList.remove("show"), 1800);
+}
 function renderDailySentence(index = dailySentenceIndex) {
   dailySentenceIndex = ((index % dailySentenceBank.length) + dailySentenceBank.length) % dailySentenceBank.length;
   const item = dailySentenceBank[dailySentenceIndex];
@@ -1550,31 +1653,45 @@ function persistSavedPhrases() {
 }
 function renderSavedPhrases() {
   const list = $("savedList");
-  if (!savedPhrases.length) {
-    list.innerHTML = `<div class="mini"><strong>还没有收藏</strong><p>点"收藏"就会保存在这里，之后可以复制出来继续练。</p></div>`;
+  const q = ($("savedSearch")?.value || "").trim().toLowerCase();
+  let filtered = savedPhrases;
+  if (q) {
+    filtered = savedPhrases.filter(item =>
+      item.en.toLowerCase().includes(q) || (item.cn || "").includes(q)
+    );
+  }
+  if (!filtered.length) {
+    list.innerHTML = `<div class="mini"><strong>${q ? "没有匹配的结果" : "还没有收藏"}</strong><p>${q ? "试试搜别的词" : "点收藏就会保存在这里"}</p></div>`;
     return;
   }
-  list.innerHTML = savedPhrases.map((item, idx) => `
-    <div class="phrase" data-saved-index="${idx}">
+  list.innerHTML = filtered.map((item, idx) => {
+    const realIdx = savedPhrases.indexOf(item);
+    return `
+    <div class="phrase" data-saved-index="${realIdx}">
       <b>${escapeHtml(item.en)}</b>
       <span>${escapeHtml(item.cn || "")}</span>
       <div class="phrase-row">
+        <button class="ghost speak-saved">朗读</button>
         <button class="ghost copy-saved">复制</button>
         <button class="ghost remove-saved">移除</button>
       </div>
-    </div>
-  `).join("");
+    </div>`;
+  }).join("");
 }
 function savePhrase(en, cn) {
   if (!savedPhrases.some(item => item.en === en)) {
     savedPhrases.unshift({ en, cn });
     persistSavedPhrases();
     toggleDailyTask("save", true);
+    showToast("已收藏");
+  } else {
+    showToast("已经收藏过了");
   }
 }
 async function copyText(text) {
   try {
     await navigator.clipboard.writeText(text);
+    showToast("已复制");
   } catch {}
 }
 function updateFocusDisplay() {
@@ -1814,6 +1931,9 @@ $("goPracticeFromHome").addEventListener("click", () => {
 $("nextSentence").addEventListener("click", () => {
   renderDailySentence(dailySentenceIndex + 1);
 });
+$("speakSentence").addEventListener("click", () => {
+  speak($("dailySentenceEn").textContent);
+});
 $("saveConfig").addEventListener("click", () => {
   useRealAI = true;
   saveSettings();
@@ -1861,16 +1981,22 @@ $("clearSaved").addEventListener("click", () => {
   savedPhrases = [];
   persistSavedPhrases();
   loadReviewCards();
+  showToast("收藏已清空");
 });
 $("copySaved").addEventListener("click", () => {
   const text = savedPhrases.map(item => `${item.en}\n${item.cn}`).join("\n\n");
   copyText(text);
 });
+$("savedSearch").addEventListener("input", renderSavedPhrases);
 $("savedList").addEventListener("click", async e => {
   const card = e.target.closest(".phrase");
   if (!card) return;
   const idx = parseInt(card.dataset.savedIndex, 10);
   if (Number.isNaN(idx)) return;
+  if (e.target.classList.contains("speak-saved")) {
+    speak(savedPhrases[idx].en);
+    return;
+  }
   if (e.target.classList.contains("copy-saved")) {
     await copyText(`${savedPhrases[idx].en}\n${savedPhrases[idx].cn}`);
   }
@@ -1882,6 +2008,10 @@ $("savedList").addEventListener("click", async e => {
 });
 document.querySelectorAll("#defaultPhraseList .phrase").forEach(card => {
   card.addEventListener("click", e => {
+    if (e.target.classList.contains("speak-phrase")) {
+      speak(card.dataset.phrase);
+      return;
+    }
     if (e.target.classList.contains("save-phrase")) {
       savePhrase(card.dataset.phrase, card.dataset.cn);
     }
