@@ -527,12 +527,17 @@
     display: grid;
     align-content: center;
     gap: 10px;
+    perspective: 600px;
   }
   .review-side .label {
     color: var(--hint);
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
+    transition: opacity 0.25s ease;
+  }
+  .front, .back {
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
   .review-side .front {
     font-size: 20px;
@@ -641,6 +646,7 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
     padding: 8px;
+    padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
     z-index: 50;
     box-shadow: 0 18px 50px rgba(0, 0, 0, 0.36);
   }
@@ -802,6 +808,12 @@
             <option value="work">工作中自我介绍</option>
             <option value="hotel">酒店入住</option>
             <option value="cafe">咖啡馆聊天</option>
+            <option value="shopping">购物砍价</option>
+            <option value="airport">机场出行</option>
+            <option value="restaurant">餐厅点餐</option>
+            <option value="doctor">看医生</option>
+            <option value="interview">面试自我介绍</option>
+            <option value="phone">打电话</option>
           </select>
         </div>
         <div class="chat" id="chat">
@@ -962,6 +974,86 @@
               <button class="ghost copy-phrase">复制</button>
             </div>
           </div>
+          <div class="phrase" data-phrase="Is this seat taken?" data-cn="这个座位有人吗？">
+            <b>Is this seat taken?</b><span>这个座位有人吗？</span>
+            <div class="breakdown"><span class="chip">社交</span><span class="chip">开场白</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="Could you recommend something?" data-cn="你能推荐点什么吗？">
+            <b>Could you recommend something?</b><span>你能推荐点什么吗？</span>
+            <div class="breakdown"><span class="chip">餐厅</span><span class="chip">购物</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I have a reservation under the name Yang." data-cn="我用 Yang 的名字预订了。">
+            <b>I have a reservation under the name Yang.</b><span>我用 Yang 的名字预订了。</span>
+            <div class="breakdown"><span class="chip">酒店</span><span class="chip">餐厅</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="Let's keep in touch." data-cn="我们保持联系。">
+            <b>Let's keep in touch.</b><span>我们保持联系。</span>
+            <div class="breakdown"><span class="chip">社交</span><span class="chip">告别</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I'm not fluent yet, but I'm getting better." data-cn="我还不流利，但我在进步。">
+            <b>I'm not fluent yet, but I'm getting better.</b><span>我还不流利，但我在进步。</span>
+            <div class="breakdown"><span class="chip">通用</span><span class="chip">自信</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I'm getting the hang of it." data-cn="我慢慢上手了。">
+            <b>I'm getting the hang of it.</b><span>我慢慢上手了。</span>
+            <div class="breakdown"><span class="chip">工作</span><span class="chip">进步</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="How much does this cost?" data-cn="这个多少钱？">
+            <b>How much does this cost?</b><span>这个多少钱？</span>
+            <div class="breakdown"><span class="chip">购物</span><span class="chip">实用</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I need to go to the airport." data-cn="我需要去机场。">
+            <b>I need to go to the airport.</b><span>我需要去机场。</span>
+            <div class="breakdown"><span class="chip">出行</span><span class="chip">交通</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="Nice to meet you." data-cn="很高兴认识你。">
+            <b>Nice to meet you.</b><span>很高兴认识你。</span>
+            <div class="breakdown"><span class="chip">社交</span><span class="chip">基础</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
+          <div class="phrase" data-phrase="I see what you mean." data-cn="我明白你的意思。">
+            <b>I see what you mean.</b><span>我明白你的意思。</span>
+            <div class="breakdown"><span class="chip">工作</span><span class="chip">社交</span></div>
+            <div class="phrase-row">
+              <button class="ghost save-phrase">收藏</button>
+              <button class="ghost copy-phrase">复制</button>
+            </div>
+          </div>
         </div>
         <div class="section-title" style="margin-top:16px;">
           <h3>我的收藏</h3>
@@ -1005,6 +1097,42 @@ const scenarios = {
     answer: "Is this seat taken? I'm just looking for a quiet place to sit.",
     cn: "这个座位有人吗？我只是想找个安静地方坐一下。",
     tip: "Is this seat taken? 是非常自然的开场句。"
+  },
+  shopping: {
+    opener: "购物场景：礼貌、直接，适合练砍价。",
+    answer: "Excuse me, how much does this cost? Do you have it in a smaller size?",
+    cn: "请问这个多少钱？有小一码的吗？",
+    tip: "how much does this cost? 是最基本的购物问价句。"
+  },
+  airport: {
+    opener: "机场场景：高效、清楚、别紧张。",
+    answer: "Excuse me, which gate should I go to for my flight?",
+    cn: "请问我的航班应该去哪个登机口？",
+    tip: "which gate 是机场最实用的问法之一。"
+  },
+  restaurant: {
+    opener: "餐厅场景：礼貌、从容、点单流畅。",
+    answer: "Could I see the menu, please? What would you recommend?",
+    cn: "能给我看看菜单吗？你有什么推荐吗？",
+    tip: "What would you recommend? 比 What's good here? 更礼貌。"
+  },
+  doctor: {
+    opener: "看病场景：清楚症状最重要。",
+    answer: "I'm not feeling well. I have a headache and a sore throat.",
+    cn: "我不太舒服，头疼，嗓子也疼。",
+    tip: "I have a + 症状 是看病最常用的结构。"
+  },
+  interview: {
+    opener: "面试场景：自信、简洁、有结构。",
+    answer: "I have experience in project management and I enjoy solving problems.",
+    cn: "我有项目管理经验，并且我喜欢解决问题。",
+    tip: "experience in + 领域 是面试自我介绍标配。"
+  },
+  phone: {
+    opener: "打电话场景：清楚慢说，确认对方听懂。",
+    answer: "Hi, this is Yang speaking. I'm calling about the meeting tomorrow.",
+    cn: "你好，我是 Yang。我打来是关于明天的会议。",
+    tip: "this is ... speaking 是电话自报家门的标准说法。"
   }
 };
 const tasks = {
@@ -1024,7 +1152,11 @@ const tasks = {
     ["13. 会议", "I have a meeting later, so I need to keep moving. = 我后面还有会，所以得继续赶时间。"],
     ["14. 邮件", "Please send me the details by email. = 请把细节发我邮箱。"],
     ["15. 确认", "Let me check my schedule first. = 我先看一下日程。"],
-    ["16. 反馈", "I'll get back to you after lunch. = 我午饭后再回复你。"]
+    ["16. 反馈", "I'll get back to you after lunch. = 我午饭后再回复你。"],
+    ["17. 推迟", "Can we push the deadline? = 我们可以推迟截止日期吗？"],
+    ["18. 跟进", "I need to follow up with the client. = 我需要跟进一下客户。"],
+    ["19. 对齐", "Let's sync up later. = 我们晚点对齐一下。"],
+    ["20. 收尾", "Great work today, team. = 大家今天干得不错。"]
   ],
   night: [
     ["1. 大声说 5 遍", "I'm not fluent yet, but I'm getting better."],
@@ -1042,10 +1174,14 @@ const tasks = {
     ["13. 复盘", "I did enough today. = 我今天做得差不多了。"],
     ["14. 心态", "I want to stay consistent, not perfect. = 我想保持稳定，而不是追求完美。"],
     ["15. 重点", "I'm focusing on clear and simple English. = 我现在专注于清楚简单的英语。"],
-    ["16. 总结", "One good sentence is enough for today. = 今天一句好句子就够了。"]
+    ["16. 总结", "One good sentence is enough for today. = 今天一句好句子就够了。"],
+    ["17. 鼓励", "Every word I learn is progress. = 我学的每个词都是进步。"],
+    ["18. 复述", "Try saying today's sentence without looking. = 不看原文试着说出今天的句子。"],
+    ["19. 打卡", "Day by day, I'm getting more confident. = 一天天，我越来越自信了。"],
+    ["20. 晚安", "Good job today. Rest well. = 今天很棒，好好休息。"]
   ],
   chat: [
-    ["1. 选场景", "从上面的下拉框选择旅游、工作、酒店或咖啡馆。"],
+    ["1. 选场景", "从上面的下拉框选择旅游、工作、酒店、购物等场景。"],
     ["2. 发一句", "可以用中文发，教练会给你英文版本。"],
     ["3. 开场", "Hi, is this seat taken? = 你好，这里有人吗？"],
     ["4. 接话", "Nice to meet you. = 很高兴认识你。"],
@@ -1060,7 +1196,11 @@ const tasks = {
     ["13. 热身", "I'm easy to talk to once I warm up. = 我一熟悉起来就很好聊。"],
     ["14. 交友", "I like meeting people from different places. = 我喜欢认识来自不同地方的人。"],
     ["15. 延续", "Let's keep the conversation going. = 我们继续聊下去吧。"],
-    ["16. 流利", "I'm still working on my fluency, but I practice regularly. = 我还在提升流利度，但我一直有在练。"]
+    ["16. 流利", "I'm still working on my fluency, but I practice regularly. = 我还在提升流利度，但我一直有在练。"],
+    ["17. 购物", "How much does this cost? = 这个多少钱？"],
+    ["18. 餐厅", "Could I have the bill, please? = 请给我账单。"],
+    ["19. 机场", "Which gate should I go to? = 我应该去哪个登机口？"],
+    ["20. 电话", "This is Yang speaking. = 我是 Yang。"]
   ],
   phrases: [
     ["1. 收藏一句", "I'd love to hear your story."],
@@ -1078,7 +1218,11 @@ const tasks = {
     ["13. 手感", "I'm getting the hang of it. = 我慢慢上手了。"],
     ["14. 追问", "What do you usually do on weekends? = 你周末通常做什么？"],
     ["15. 补充", "I'm looking for the right words. = 我在找合适的词。"],
-    ["16. 自然", "Let's keep it natural. = 我们尽量说得自然一点。"]
+    ["16. 自然", "Let's keep it natural. = 我们尽量说得自然一点。"],
+    ["17. 购物", "Can I try this on? = 我能试穿一下吗？"],
+    ["18. 点餐", "I'll have what she's having. = 我要和她一样的。"],
+    ["19. 机场", "My flight has been delayed. = 我的航班延误了。"],
+    ["20. 面试", "I have experience in project management. = 我有项目管理经验。"]
   ]
 };
 const titles = {
@@ -1117,156 +1261,145 @@ const dailyTasks = [
   { id: "save", title: "收藏一句酷句", desc: "把今天最顺口的一句存进收藏。", button: "已收藏" },
 ];
 const dailySentenceBank = [
-  {
-    en: "I'm just here for a few days.",
-    cn: "我只是来这里待几天。",
-    tags: ["travel = 旅游", "a few days = 几天", "适合开场"]
-  },
-  {
-    en: "Could you recommend a good local restaurant?",
-    cn: "你可以推荐一家不错的本地餐厅吗？",
-    tags: ["recommend = 推荐", "local restaurant = 本地餐厅", "点餐/旅游"]
-  },
-  {
-    en: "I'd like to check in, please.",
-    cn: "我想办理入住。",
-    tags: ["check in = 办理入住", "hotel = 酒店", "高频实用"]
-  },
-  {
-    en: "How do I get to the city center?",
-    cn: "我怎么去市中心？",
-    tags: ["get to = 到达", "city center = 市中心", "问路"]
-  },
-  {
-    en: "Is it okay if I take a photo here?",
-    cn: "我可以在这里拍照吗？",
-    tags: ["take a photo = 拍照", "礼貌表达", "旅行常用"]
-  },
-  {
-    en: "I want something simple and affordable.",
-    cn: "我想要简单又实惠的东西。",
-    tags: ["simple = 简单", "affordable = 实惠", "点餐/购物"]
-  },
-  {
-    en: "Could you say that more slowly?",
-    cn: "你可以说慢一点吗？",
-    tags: ["say that more slowly = 说慢一点", "礼貌提问", "听不懂时很好用"]
-  },
-  {
-    en: "I'm looking for a place that's easy to find.",
-    cn: "我在找一个容易找到的地方。",
-    tags: ["easy to find = 容易找到", "place = 地方", "适合导航"]
-  },
-  {
-    en: "This is my first time here.",
-    cn: "这是我第一次来这里。",
-    tags: ["first time = 第一次", "here = 这里", "自然自我介绍"]
-  },
-  {
-    en: "I'd love to try something local.",
-    cn: "我很想试试本地特色。",
-    tags: ["local = 本地特色", "try something = 尝试一些东西", "旅游必备"]
-  },
-  {
-    en: "I work in tech, and I like clear communication.",
-    cn: "我做科技相关工作，而且我喜欢清楚直接的沟通。",
-    tags: ["work in tech = 做科技工作", "clear communication = 清楚沟通", "工作感"]
-  },
-  {
-    en: "Please send me the details by email.",
-    cn: "请把细节发我邮箱。",
-    tags: ["send me = 发给我", "by email = 通过邮箱", "工作场景"]
-  },
-  {
-    en: "I have a meeting later, so I need to keep moving.",
-    cn: "我后面还有会，所以得继续赶时间。",
-    tags: ["meeting later = 后面有会", "keep moving = 继续赶时间", "上班节奏"]
-  },
-  {
-    en: "I'm still learning English, so please speak slowly.",
-    cn: "我还在学英语，所以请说慢一点。",
-    tags: ["still learning English = 还在学英语", "speak slowly = 说慢一点", "真实好用"]
-  },
-  {
-    en: "Let me check my schedule first.",
-    cn: "我先看一下日程。",
-    tags: ["check my schedule = 看日程", "first = 先", "工作通用"]
-  },
-  {
-    en: "I can handle that after lunch.",
-    cn: "我午饭后可以处理这个。",
-    tags: ["after lunch = 午饭后", "handle that = 处理这个", "工作口语"]
-  },
-  {
-    en: "I'm trying to be more direct and clear.",
-    cn: "我在努力变得更直接、更清楚。",
-    tags: ["direct and clear = 直接清楚", "trying to = 正在努力", "很像真实工作表达"]
-  },
-  {
-    en: "I work remotely, so my schedule is flexible.",
-    cn: "我远程工作，所以时间比较灵活。",
-    tags: ["work remotely = 远程工作", "flexible = 灵活", "介绍自己"]
-  },
-  {
-    en: "I'm around if you need anything.",
-    cn: "如果你需要什么，我都在。",
-    tags: ["I'm around = 我在", "need anything = 需要什么", "友好"]
-  },
-  {
-    en: "Thanks for the quick update.",
-    cn: "谢谢你快速更新我。",
-    tags: ["quick update = 快速更新", "thank you = 礼貌", "工作常见"]
-  },
-  {
-    en: "I'd love to hear your story.",
-    cn: "我很想听听你的故事。",
-    tags: ["hear your story = 听你的故事", "社交", "友好开场"]
-  },
-  {
-    en: "What do you usually do on weekends?",
-    cn: "你周末通常做什么？",
-    tags: ["usually do = 通常做", "on weekends = 周末", "聊天延伸"]
-  },
-  {
-    en: "I'm easy to talk to once I warm up.",
-    cn: "我一熟悉起来就很好聊。",
-    tags: ["easy to talk to = 很好聊", "warm up = 熟悉起来", "社交"]
-  },
-  {
-    en: "I like meeting people from different places.",
-    cn: "我喜欢认识来自不同地方的人。",
-    tags: ["meeting people = 认识人", "different places = 不同地方", "交朋友"]
-  },
-  {
-    en: "Let's keep the conversation going.",
-    cn: "我们继续聊下去吧。",
-    tags: ["keep the conversation going = 继续聊天", "自然", "高频"]
-  },
-  {
-    en: "That's a great question.",
-    cn: "这是个很好的问题。",
-    tags: ["great question = 好问题", "反应自然", "万能句"]
-  },
-  {
-    en: "I'm not fluent yet, but I'm getting better.",
-    cn: "我还不流利，但我正在变好。",
-    tags: ["not fluent yet = 还不流利", "getting better = 正在变好", "自我介绍"]
-  },
-  {
-    en: "I want to sound more natural when I speak.",
-    cn: "我想说话时听起来更自然。",
-    tags: ["sound more natural = 听起来更自然", "口语", "目标表达"]
-  },
-  {
-    en: "I'm figuring things out one step at a time.",
-    cn: "我在一步一步摸索。",
-    tags: ["figuring things out = 摸索", "one step at a time = 一步一步", "很稳"]
-  },
-  {
-    en: "One good sentence is enough for today.",
-    cn: "今天一句好句子就够了。",
-    tags: ["one good sentence = 一句好句子", "today = 今天", "收尾感"]
-  }
+  /* ----- TRAVEL (1-15) ----- */
+  { en: "I'm just here for a few days.", cn: "我只是来这里待几天。", tags: ["travel = 旅游", "a few days = 几天", "适合开场"] },
+  { en: "Could you recommend a good local restaurant?", cn: "你可以推荐一家不错的本地餐厅吗？", tags: ["recommend = 推荐", "local restaurant = 本地餐厅", "点餐/旅游"] },
+  { en: "How do I get to the city center?", cn: "我怎么去市中心？", tags: ["get to = 到达", "city center = 市中心", "问路"] },
+  { en: "Is it okay if I take a photo here?", cn: "我可以在这里拍照吗？", tags: ["take a photo = 拍照", "礼貌表达", "旅行常用"] },
+  { en: "This is my first time here.", cn: "这是我第一次来这里。", tags: ["first time = 第一次", "here = 这里", "自然自我介绍"] },
+  { en: "I'd love to try something local.", cn: "我很想试试本地特色。", tags: ["local = 本地特色", "try something = 接触新东西", "旅游必备"] },
+  { en: "Is there a bus that goes to the airport?", cn: "有去机场的公交车吗？", tags: ["bus = 公交", "airport = 机场", "交通出行"] },
+  { en: "How far is it from here?", cn: "离这里多远？", tags: ["how far = 多远", "distance = 距离", "问路高频"] },
+  { en: "Can I get a map of the area?", cn: "能给我一张区域地图吗？", tags: ["map = 地图", "area = 区域", "旅行实用"] },
+  { en: "What time does the museum open?", cn: "博物馆几点开门？", tags: ["museum = 博物馆", "open = 开门", "景点"] },
+  { en: "I'd like to book a guided tour.", cn: "我想预订一个导游团。", tags: ["book = 预订", "guided tour = 导游团", "旅游"] },
+  { en: "Is there a convenience store nearby?", cn: "附近有便利店吗？", tags: ["convenience store = 便利店", "nearby = 附近", "日常"] },
+  { en: "Do you have a map in English?", cn: "有英文地图吗？", tags: ["map in English = 英文地图", "旅游", "实用"] },
+  { en: "Can I rent a bike here?", cn: "我能在这里租自行车吗？", tags: ["rent a bike = 租自行车", "travel = 旅游", "自由行"] },
+  { en: "Are there any good hiking trails near here?", cn: "附近有什么好的徒步路线吗？", tags: ["hiking trails = 徒步路线", "nature = 自然", "户外"] },
+
+  /* ----- WORK (16-30) ----- */
+  { en: "I work in tech, and I like clear communication.", cn: "我做科技相关工作，而且我喜欢清楚直接的沟通。", tags: ["work in tech = 做科技工作", "clear communication = 清楚沟通", "工作感"] },
+  { en: "Please send me the details by email.", cn: "请把细节发我邮箱。", tags: ["send me = 发给我", "by email = 通过邮箱", "工作场景"] },
+  { en: "I have a meeting later, so I need to keep moving.", cn: "我后面还有会，所以得继续赶时间。", tags: ["meeting later = 后面有会", "keep moving = 继续赶时间", "上班节奏"] },
+  { en: "I'm still learning English, so please speak slowly.", cn: "我还在学英语，所以请说慢一点。", tags: ["still learning English = 还在学英语", "speak slowly = 说慢一点", "真实好用"] },
+  { en: "Let me check my schedule first.", cn: "我先看一下日程。", tags: ["check my schedule = 看日程", "first = 先", "工作通用"] },
+  { en: "I can handle that after lunch.", cn: "我午饭后可以处理这个。", tags: ["after lunch = 午饭后", "handle that = 处理这个", "工作口语"] },
+  { en: "I'm trying to be more direct and clear.", cn: "我在努力变得更直接、更清楚。", tags: ["direct and clear = 直接清楚", "trying to = 正在努力", "工作表达"] },
+  { en: "I work remotely, so my schedule is flexible.", cn: "我远程工作，所以时间比较灵活。", tags: ["work remotely = 远程工作", "flexible = 灵活", "介绍自己"] },
+  { en: "I'm around if you need anything.", cn: "如果你需要什么，我都在。", tags: ["I'm around = 我在", "need anything = 需要什么", "友好"] },
+  { en: "Thanks for the quick update.", cn: "谢谢你快速更新我。", tags: ["quick update = 快速更新", "thank you = 礼貌", "工作常见"] },
+  { en: "Can we push the deadline to next week?", cn: "我们能把截止日期推到下周吗？", tags: ["push the deadline = 推迟截止", "next week = 下周", "工作沟通"] },
+  { en: "I'll circle back with you after the meeting.", cn: "我开完会再回复你。", tags: ["circle back = 回头再谈", "meeting = 会议", "商务口语"] },
+  { en: "Let's sync up on this later.", cn: "我们晚点对齐一下这个。", tags: ["sync up = 对齐", "later = 稍后", "工作常用"] },
+  { en: "Could you clarify what you mean by that?", cn: "你能澄清一下你指的是什么吗？", tags: ["clarify = 澄清", "mean by that = 指的是", "提问"] },
+  { en: "I need to follow up with the client.", cn: "我需要跟进一下客户。", tags: ["follow up = 跟进", "client = 客户", "商务"] },
+
+  /* ----- HOTEL (31-42) ----- */
+  { en: "I'd like to check in, please.", cn: "我想办理入住。", tags: ["check in = 办理入住", "hotel = 酒店", "高频实用"] },
+  { en: "Could you help me with my luggage?", cn: "你能帮我拿一下行李吗？", tags: ["luggage = 行李", "help with = 帮忙", "酒店服务"] },
+  { en: "Is breakfast included?", cn: "含早餐吗？", tags: ["breakfast = 早餐", "included = 包含在内", "酒店"] },
+  { en: "What time is checkout?", cn: "退房时间是几点？", tags: ["checkout = 退房", "what time = 几点", "酒店常见"] },
+  { en: "Could I get a wake-up call at 7am?", cn: "能在早上 7 点叫醒我吗？", tags: ["wake-up call = 叫醒电话", "7am = 早上 7 点", "酒店"] },
+  { en: "Is there Wi-Fi in the room?", cn: "房间有 Wi-Fi 吗？", tags: ["Wi-Fi = 无线网络", "in the room = 房间里", "酒店"] },
+  { en: "Can I get an extra towel, please?", cn: "能再给我一条毛巾吗？", tags: ["extra towel = 额外毛巾", "please = 请", "客房服务"] },
+  { en: "The air conditioner isn't working.", cn: "空调坏了。", tags: ["air conditioner = 空调", "not working = 不工作", "报修"] },
+  { en: "Could you call a taxi for me?", cn: "你能帮我叫个出租车吗？", tags: ["call a taxi = 叫出租车", "hotel = 酒店", "出行"] },
+  { en: "I'd like to extend my stay by one night.", cn: "我想多住一晚。", tags: ["extend my stay = 延长住宿", "one night = 一晚", "酒店"] },
+  { en: "Do you have a shuttle to the airport?", cn: "有去机场的班车吗？", tags: ["shuttle = 班车", "airport = 机场", "酒店服务"] },
+  { en: "Can I leave my luggage here after checkout?", cn: "退房后能把行李寄存在这里吗？", tags: ["leave my luggage = 寄存行李", "after checkout = 退房后", "酒店"] },
+
+  /* ----- RESTAURANT (43-54) ----- */
+  { en: "I want something simple and affordable.", cn: "我想要简单又实惠的东西。", tags: ["simple = 简单", "affordable = 实惠", "点餐/购物"] },
+  { en: "Could you say that more slowly?", cn: "你可以说慢一点吗？", tags: ["say that more slowly = 说慢一点", "礼貌提问", "听不懂时很好用"] },
+  { en: "I'm looking for a place that's easy to find.", cn: "我在找一个容易找到的地方。", tags: ["easy to find = 容易找到", "place = 地方", "适合导航"] },
+  { en: "Could I see the menu, please?", cn: "能给我看看菜单吗？", tags: ["menu = 菜单", "see = 看一下", "餐厅"] },
+  { en: "What would you recommend?", cn: "你有什么推荐？", tags: ["recommend = 推荐", "what = 什么", "点餐"] },
+  { en: "I'll have the same as that table.", cn: "我要和那桌一样的。", tags: ["the same = 一样", "that table = 那桌", "点餐技巧"] },
+  { en: "Could I get this to go?", cn: "这个能打包吗？", tags: ["to go = 外带", "takeaway = 打包", "餐厅"] },
+  { en: "Can I have the bill, please?", cn: "请给我账单。", tags: ["bill = 账单", "check = 结账", "用餐结束"] },
+  { en: "Is service charge included?", cn: "含服务费吗？", tags: ["service charge = 服务费", "included = 包含", "付款"] },
+  { en: "I have a reservation for two at 7pm.", cn: "我预订了今晚 7 点两位。", tags: ["reservation = 预订", "for two = 两位", "餐厅"] },
+  { en: "Could we sit by the window?", cn: "我们可以坐窗边吗？", tags: ["by the window = 靠窗", "sit = 坐", "座位"] },
+  { en: "This is not what I ordered.", cn: "这不是我点的。", tags: ["not what I ordered = 不是我点的", "complaint = 投诉", "餐厅"] },
+
+  /* ----- SHOPPING (55-66) ----- */
+  { en: "How much does this cost?", cn: "这个多少钱？", tags: ["how much = 多少钱", "cost = 价格", "购物基础"] },
+  { en: "Do you have this in a smaller size?", cn: "这个有小一码的吗？", tags: ["smaller size = 更小尺寸", "size = 尺码", "购物"] },
+  { en: "Can I try this on?", cn: "我能试穿一下吗？", tags: ["try on = 试穿", "fitting = 试衣", "购物"] },
+  { en: "Where is the fitting room?", cn: "试衣间在哪里？", tags: ["fitting room = 试衣间", "where is = 在哪里", "购物"] },
+  { en: "Is there a discount on this item?", cn: "这件有折扣吗？", tags: ["discount = 折扣", "item = 商品", "省钱"] },
+  { en: "I'm just looking, thanks.", cn: "我只是看看，谢谢。", tags: ["just looking = 随便看看", "polite = 礼貌", "购物"] },
+  { en: "Do you accept credit cards?", cn: "你们接受信用卡吗？", tags: ["credit cards = 信用卡", "payment = 支付", "结账"] },
+  { en: "Can I get a refund if it doesn't fit?", cn: "如果不合身可以退款吗？", tags: ["refund = 退款", "doesn't fit = 不合身", "售后"] },
+  { en: "I'm looking for a gift for a friend.", cn: "我在找送给朋友的礼物。", tags: ["gift = 礼物", "for a friend = 给朋友", "购物"] },
+  { en: "Do you have anything cheaper?", cn: "有便宜一点的吗？", tags: ["cheaper = 更便宜", "anything = 任何东西", "砍价"] },
+  { en: "Can you wrap it as a gift, please?", cn: "能包成礼品吗？", tags: ["wrap = 包装", "gift = 礼物", "购物服务"] },
+  { en: "I'd like to exchange this for a different color.", cn: "我想换一个不同的颜色。", tags: ["exchange = 更换", "different color = 不同颜色", "购物售后"] },
+
+  /* ----- AIRPORT (67-76) ----- */
+  { en: "Where is the check-in counter?", cn: "值机柜台在哪里？", tags: ["check-in counter = 值机柜台", "airport = 机场", "出发"] },
+  { en: "Is my flight on time?", cn: "我的航班准时吗？", tags: ["on time = 准时", "flight = 航班", "机场"] },
+  { en: "How many bags can I check in?", cn: "我可以托运几个包？", tags: ["check in = 托运", "bags = 行李", "机场"] },
+  { en: "Which gate do I need to go to?", cn: "我需要去哪个登机口？", tags: ["gate = 登机口", "go to = 去", "机场"] },
+  { en: "Where is the boarding gate?", cn: "登机口在哪里？", tags: ["boarding gate = 登机口", "where = 哪里", "机场"] },
+  { en: "What time does boarding start?", cn: "几点开始登机？", tags: ["boarding = 登机", "start = 开始", "机场"] },
+  { en: "My flight has been delayed.", cn: "我的航班延误了。", tags: ["delayed = 延误", "flight = 航班", "机场"] },
+  { en: "Can I get a window seat?", cn: "我能要一个靠窗座位吗？", tags: ["window seat = 靠窗座位", "preference = 偏好", "值机"] },
+  { en: "Where can I pick up my luggage?", cn: "我在哪里取行李？", tags: ["pick up = 取", "luggage = 行李", "到达"] },
+  { en: "I need to go through security now.", cn: "我现在需要过安检。", tags: ["security = 安检", "go through = 通过", "机场流程"] },
+
+  /* ----- SOCIAL (77-88) ----- */
+  { en: "I'd love to hear your story.", cn: "我很想听听你的故事。", tags: ["hear your story = 听你的故事", "社交", "友好开场"] },
+  { en: "What do you usually do on weekends?", cn: "你周末通常做什么？", tags: ["usually do = 通常做", "on weekends = 周末", "聊天延伸"] },
+  { en: "I'm easy to talk to once I warm up.", cn: "我一熟悉起来就很好聊。", tags: ["easy to talk to = 很好聊", "warm up = 熟悉起来", "社交"] },
+  { en: "I like meeting people from different places.", cn: "我喜欢认识来自不同地方的人。", tags: ["meeting people = 认识人", "different places = 不同地方", "交朋友"] },
+  { en: "Let's keep the conversation going.", cn: "我们继续聊下去吧。", tags: ["keep the conversation going = 继续聊天", "自然", "高频"] },
+  { en: "That's a great question.", cn: "这是个很好的问题。", tags: ["great question = 好问题", "反应自然", "万能句"] },
+  { en: "I'm not fluent yet, but I'm getting better.", cn: "我还不流利，但我正在变好。", tags: ["not fluent yet = 还不流利", "getting better = 正在变好", "自我介绍"] },
+  { en: "I want to sound more natural when I speak.", cn: "我想说话时听起来更自然。", tags: ["sound more natural = 听起来更自然", "口语", "目标表达"] },
+  { en: "I'm figuring things out one step at a time.", cn: "我在一步一步摸索。", tags: ["figuring things out = 摸索", "one step at a time = 一步一步", "很稳"] },
+  { en: "One good sentence is enough for today.", cn: "今天一句好句子就够了。", tags: ["one good sentence = 一句好句子", "today = 今天", "收尾感"] },
+  { en: "It was really nice meeting you.", cn: "认识你真的很高兴。", tags: ["nice meeting you = 很高兴认识你", "社交", "告别"] },
+  { en: "Let me know if you're ever in my city.", cn: "如果你来我的城市，告诉我一声。", tags: ["let me know = 告诉我", "in my city = 在我的城市", "保持联系"] },
+
+  /* ----- DAILY LIFE (89-100) ----- */
+  { en: "I'm running late today.", cn: "我今天要迟到了。", tags: ["running late = 要迟到了", "today = 今天", "日常"] },
+  { en: "What's the weather like today?", cn: "今天天气怎么样？", tags: ["weather = 天气", "what's like = 怎么样", "闲聊"] },
+  { en: "I need to do some grocery shopping.", cn: "我需要去买点菜。", tags: ["grocery shopping = 买菜", "need to = 需要", "日常生活"] },
+  { en: "I usually wake up at 7am.", cn: "我通常早上 7 点起床。", tags: ["wake up = 起床", "usually = 通常", "日常习惯"] },
+  { en: "I'm going to the gym later.", cn: "我稍后去健身房。", tags: ["gym = 健身房", "later = 稍后", "运动"] },
+  { en: "I had a busy day at work.", cn: "我今天工作很忙。", tags: ["busy day = 忙碌的一天", "work = 工作", "日常"] },
+  { en: "Let's grab coffee sometime.", cn: "我们改天喝杯咖啡吧。", tags: ["grab coffee = 喝杯咖啡", "sometime = 改天", "邀请"] },
+  { en: "I'm not feeling well today.", cn: "我今天不太舒服。", tags: ["not feeling well = 不舒服", "today = 今天", "健康"] },
+  { en: "I need to take a day off.", cn: "我需要请一天假。", tags: ["take a day off = 请一天假", "need = 需要", "工作请假"] },
+  { en: "The traffic was terrible this morning.", cn: "今天早上交通糟透了。", tags: ["traffic = 交通", "terrible = 糟糕", "通勤"] },
+  { en: "I'm looking forward to the weekend.", cn: "我很期待周末。", tags: ["looking forward to = 期待", "weekend = 周末", "日常"] },
+  { en: "I think I'll stay in tonight.", cn: "我想今晚待在家里。", tags: ["stay in = 待在家", "tonight = 今晚", "日常"] },
+
+  /* ----- EMERGENCY (101-108) ----- */
+  { en: "I need help.", cn: "我需要帮助。", tags: ["need help = 需要帮助", "紧急", "万能"] },
+  { en: "Please call an ambulance.", cn: "请叫救护车。", tags: ["call an ambulance = 叫救护车", "emergency = 紧急", "医疗"] },
+  { en: "I lost my passport.", cn: "我的护照丢了。", tags: ["lost = 丢了", "passport = 护照", "证件丢失"] },
+  { en: "I've been robbed.", cn: "我被抢劫了。", tags: ["robbed = 被抢劫", "emergency = 紧急", "报警"] },
+  { en: "I need to go to the hospital.", cn: "我需要去医院。", tags: ["hospital = 医院", "need = 需要", "医疗"] },
+  { en: "Is there a pharmacy nearby?", cn: "附近有药店吗？", tags: ["pharmacy = 药店", "nearby = 附近", "买药"] },
+  { en: "I can't find my phone.", cn: "我找不到手机了。", tags: ["can't find = 找不到", "phone = 手机", "丢失"] },
+  { en: "Please call the police.", cn: "请报警。", tags: ["call the police = 报警", "emergency = 紧急", "求助"] },
+
+  /* ----- BUSINESS (109-120) ----- */
+  { en: "Nice to meet you, I'm Yang.", cn: "很高兴认识你，我是 Yang。", tags: ["nice to meet you = 很高兴认识你", "self-intro = 自我介绍", "商务基本"] },
+  { en: "Thank you for taking the time to meet me.", cn: "感谢你抽时间见我。", tags: ["taking the time = 抽时间", "thank you = 感谢", "商务礼貌"] },
+  { en: "I look forward to working with you.", cn: "我期待和你合作。", tags: ["look forward to = 期待", "working with you = 和你合作", "商务"] },
+  { en: "Could you send me the proposal?", cn: "你能把方案发给我吗？", tags: ["proposal = 方案", "send me = 发给我", "商务"] },
+  { en: "Let me introduce you to my colleague.", cn: "让我把你介绍给我的同事。", tags: ["introduce = 介绍", "colleague = 同事", "商务"] },
+  { en: "It's a pleasure to meet you all.", cn: "很高兴见到大家。", tags: ["pleasure = 荣幸", "meet you all = 见到大家", "会议开场"] },
+  { en: "I'll send you a meeting invite.", cn: "我会发一个会议邀请给你。", tags: ["meeting invite = 会议邀请", "send = 发送", "工作"] },
+  { en: "Can we schedule a call for tomorrow?", cn: "我们能约明天打个电话吗？", tags: ["schedule = 安排", "call = 通话", "商务"] },
+  { en: "Let me give you a quick overview.", cn: "我给你快速概述一下。", tags: ["quick overview = 快速概述", "presentation = 演示", "商务"] },
+  { en: "I'd like to discuss the contract terms.", cn: "我想讨论一下合同条款。", tags: ["contract terms = 合同条款", "discuss = 讨论", "商务"] },
+  { en: "We need to finalize the budget by Friday.", cn: "我们周五前需要敲定预算。", tags: ["finalize = 敲定", "budget = 预算", "工作"] },
+  { en: "Let's touch base next week.", cn: "我们下周联系一下。", tags: ["touch base = 联系", "next week = 下周", "商务"] }
 ];
 function $(id) { return document.getElementById(id); }
 function setPage(page) {
@@ -1294,6 +1427,21 @@ function renderTasks(mode) {
       <p>${item[1]}</p>
     </div>
   `).join("");
+}
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    osc.type = "sine";
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 1);
+  } catch (_) { /* silent fail */ }
 }
 function renderDailySentence(index = dailySentenceIndex) {
   dailySentenceIndex = ((index % dailySentenceBank.length) + dailySentenceBank.length) % dailySentenceBank.length;
@@ -1455,6 +1603,7 @@ function startFocusTimer() {
       focusLeft = focusTotal;
       focusRunning = false;
       clearInterval(focusTimer);
+      playBeep();
       toggleDailyTask("practice", true);
       appendBubble("ai", "练习完成。你已经完成了一轮专注练习。", "今天的进度又往前了一步。");
     }
@@ -1769,7 +1918,7 @@ loadSavedPhrases();
 loadConversation();
 loadReviewCards();
 setFocusPreset(3);
-renderDailySentence(todayKey().split("-").reduce((sum, part) => sum + parseInt(part, 10), 0));
+renderDailySentence(Math.floor(Date.now() / 86400000));
 if (!conversation.length) {
   conversation.push({ role: "assistant", text: `Hey Yang, let's practice. 你可以直接发中文，比如：\u201c我英语还不好，但我想认识更多朋友。\u201d` });
   persistConversation();
