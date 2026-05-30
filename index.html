@@ -1336,11 +1336,21 @@ let focusLeft = focusTotal;
 let focusTimer = null;
 let focusRunning = false;
 let dailySentenceIndex = 0;
-const dailyTasks = [
+const dailyTaskPool = [
   { id: "sentence", title: "学今日一句", desc: "先把今天这句读懂，再点一下完成。", button: "已读过" },
   { id: "practice", title: "完成一轮练习", desc: "做 3 分钟、10 分钟或 20 分钟练习都算。", button: "已完成" },
   { id: "save", title: "收藏一句酷句", desc: "把今天最顺口的一句存进收藏。", button: "已收藏" },
+  { id: "speak_aloud", title: "大声朗读 5 遍", desc: "找今天一句英文，读出来 5 次。", button: "读完了" },
+  { id: "write_one", title: "用英语写一句话", desc: "随便写一句关于今天的事，不要求完美。", button: "写好了" },
+  { id: "review_phrase", title: "复习收藏的句子", desc: "打开收藏，随机看 3 条，默念一遍。", button: "复习了" },
+  { id: "chat_ai", title: "跟 AI 聊一轮", desc: "切到对话模式，发一句话试试。", button: "聊完了" },
+  { id: "imitate_3x", title: "模仿发音 3 次", desc: "用朗读按钮听一句，跟着读 3 次。", button: "模仿了" },
+  { id: "focus_3min", title: "专注 3 分钟", desc: "开启计时器，专心练 3 分钟。", button: "练完了" },
+  { id: "new_word", title: "学一个生词", desc: "在今日句子里找一个不认识的词，记下来。", button: "记住了" },
+  { id: "translate", title: "英译中一句", desc: "打开酷句库选一句英文，心里翻成中文。", button: "翻译了" },
+  { id: "night_review", title: "睡前回顾", desc: "回想今天学的句子，脑子里过一遍。", button: "回顾了" }
 ];
+let dailyTasks = [];
 const dailySentenceBank = [
   /* ----- TRAVEL (1-15) ----- */
   { en: "I'm just here for a few days.", cn: "我只是来这里待几天。", tags: ["travel = 旅游", "a few days = 几天", "适合开场"] },
@@ -1571,6 +1581,20 @@ function persistDailyState() {
   localStorage.setItem(getDailyKey(), JSON.stringify(dailyState));
   renderDailyTasks();
 }
+function pickDailyTasks(shuffle) {
+  const key = "talkpilot_tasks_" + todayKey();
+  const saved = localStorage.getItem(key);
+  if (saved && !shuffle) {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed) && parsed.length) {
+      dailyTasks = parsed;
+      return;
+    }
+  }
+  const shuffled = [...dailyTaskPool].sort(() => Math.random() - 0.5);
+  dailyTasks = shuffled.slice(0, 4);
+  localStorage.setItem(key, JSON.stringify(dailyTasks));
+}
 function toggleDailyTask(id, force) {
   const next = typeof force === "boolean" ? force : !dailyState[id];
   dailyState[id] = next;
@@ -1588,7 +1612,7 @@ function renderDailyTasks() {
       </div>
       <div class="check">${dailyState[task.id] ? "✓" : ""}</div>
     </div>
-  `).join("");
+  `).join("") + `<button class="ghost" id="reshuffleTasks" style="margin-top:8px;width:100%;">换一批任务</button>`;
 }
 function syncSavedCount() {
   $("savedCount").textContent = String(savedPhrases.length);
@@ -1957,9 +1981,16 @@ $("model").addEventListener("input", () => {
 });
 $("resetDaily").addEventListener("click", () => {
   dailyState = {};
+  pickDailyTasks(true);
   persistDailyState();
 });
 $("dailyTasks").addEventListener("click", e => {
+  if (e.target.id === "reshuffleTasks") {
+    dailyState = {};
+    pickDailyTasks(true);
+    persistDailyState();
+    return;
+  }
   const row = e.target.closest(".task-row");
   if (!row) return;
   toggleDailyTask(row.dataset.taskId);
@@ -2044,6 +2075,7 @@ document.querySelectorAll(".nav-btn").forEach(btn => {
 loadSettings();
 renderTasks(currentMode);
 updateStreak();
+pickDailyTasks();
 loadDailyState();
 loadSavedPhrases();
 loadConversation();
